@@ -92,11 +92,7 @@ int main(int argc, char* argv[])
         try
         {
             vector<string> result = lazy_cartesian_product::entry_at(pc.combinations, n);
-            if (show_keys)
-            {
-                display_keys(pc.keys, delim);
-            }
-            display_results(result, delim, display_json);
+            display_results(result, pc.keys, delim, display_json, show_keys);
             return 0;
         }
         catch (char const* e)
@@ -117,7 +113,7 @@ int main(int argc, char* argv[])
                 {
                     display_keys(pc.keys, delim);
                 }
-                display_results(result, pc.keys, delim, display_json);
+                display_results(result, pc.keys, delim, display_json, show_keys);
                 return 0;
             }
             else
@@ -129,7 +125,7 @@ int main(int argc, char* argv[])
                     {
                         display_keys(pc.keys, delim);
                     }
-                    display_results(result, pc.keys,  delim, display_json);
+                    display_results(result, pc.keys,  delim, display_json, show_keys);
                     cout << "\n" << result.size() << " record(s) written to " << output << "\n";
                }
                else
@@ -228,10 +224,14 @@ const possible_combinations parse_input(const string &input)
     }
 }
 
-const void display_results(const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_json)
+const void display_results(const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys)
 {
     if (!display_json)
     {
+        if (show_keys)
+        {
+            display_keys(keys, delim);
+        }
         for (auto &row : results)
         {
             for (auto &s: row)
@@ -271,10 +271,14 @@ const void display_results(const vector<vector<string>> &results, const vector<s
     }
 }
 
-const void display_results(const vector<string> &row, const char &delim, const bool &display_json)
+const void display_results(const vector<string> &row, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys)
 {
     if (!display_json)
     {
+        if (show_keys)
+        {
+            display_keys(keys, delim);
+        }
         for (auto &s: row)
         {
             if (&s == &row.back())
@@ -287,6 +291,19 @@ const void display_results(const vector<string> &row, const char &delim, const b
             }
         }
         cout << "\n";
+    }
+    else
+    {
+        const long key_size = keys.size();
+        const long results_size = row.size();
+        cout << "[\n";
+        json entry;
+        for (long j = 0; j < key_size; ++j)
+        {
+            entry[keys[j]] = row[j];
+        }
+        cout << entry.dump(4);
+        cout << "]\n";
     }
 }
 
@@ -351,7 +368,7 @@ const void write_to_file(const string &file, const vector<vector<string>> &resul
             }
             output << "\n";
         }
-        output << "]";
+        output << "]\n";
     }
     output.close();
 }

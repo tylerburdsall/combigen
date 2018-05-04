@@ -34,8 +34,8 @@ struct possible_combinations
 const void display_help(void);
 const void display_keys(const vector<string> &keys, const char &delim);
 const possible_combinations parse_input(const string &input);
-const void display_results(const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_json);
-const void display_results(const vector<string >&row, const char &delim, const bool &display_json);
+const void display_results(const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys);
+const void display_results(const vector<string >&row, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys);
 const void write_to_file(const string &file, const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_keys, const bool &display_json);
 
 #endif
