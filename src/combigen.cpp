@@ -6,8 +6,7 @@ int main(int argc, char* argv[])
     long r = 0;
     long n = -1;
     bool verbose = false;
-    bool generate_subset = false;
-    bool generate_all = false;
+    bool generate_all_combinations = false;
     bool display_json = false;
     bool show_keys = false;
     char delim = ',';
@@ -22,7 +21,7 @@ int main(int argc, char* argv[])
                 display_help();
                 exit(0);
             case 'a':
-                generate_all = true;
+                generate_all_combinations = true;
                 break;
             case 'n':
                 if (optarg)
@@ -63,7 +62,6 @@ int main(int argc, char* argv[])
                 {
                     istringstream iss (optarg);
                     iss >> r;
-                    generate_subset = true;
                 }
                 break;
             case 'd':
@@ -91,7 +89,7 @@ int main(int argc, char* argv[])
 
     pc = parse_input(input);
     
-    if (generate_all)
+    if (generate_all_combinations)
     {
         generate_all(output, pc, delim, show_keys, display_json, verbose);
         exit(0);
@@ -119,10 +117,6 @@ int main(int argc, char* argv[])
             vector<vector<string>> result = lazy_cartesian_product::generate_samples(pc.combinations, r);
             if (output.empty())
             {
-                if (show_keys)
-                {
-                    display_keys(pc.keys, delim);
-                }
                 display_results(result, pc.keys, delim, display_json, show_keys);
                 return 0;
             }
@@ -131,10 +125,6 @@ int main(int argc, char* argv[])
                write_to_file(output, result, pc.keys, delim, show_keys, display_json); 
                if (verbose)
                {
-                    if (show_keys)
-                    {
-                        display_keys(pc.keys, delim);
-                    }
                     display_results(result, pc.keys,  delim, display_json, show_keys);
                }
                else
@@ -149,8 +139,11 @@ int main(int argc, char* argv[])
             exit(-1);
         }
     }
-
-    return 0;
+    else
+    {
+	display_help();
+	exit(0);
+    }
 }
 
 const void display_help(void)
@@ -159,15 +152,18 @@ const void display_help(void)
          << "   -h             Displays this help message" << "\n"
          << "   -a             Generates every possible combination (use with caution)" << "\n"
          << "   -n <index>     Generate combination at nth index" << "\n"
-         << "   -i <input>     Take the given .json file or string as input for the combinations" << "\n"
+         << "   -i <input>     Take the given .json file or string as" << "\n"
+	 << "                  input for the combinations." << "\n"
          << "                  Example: \"{ \"foo\": [ \"a\", \"b\", \"c\" ], \"bar\": [ \"1\", \"2\" ] }\"" << "\n"
          << "   -o <output>    Write out the results to the file name" << "\n"
          << "   -t <type>      Output type (csv or json). Defaults to csv" << "\n"
-         << "   -r <size>      Generate a random sample of size r from the possible set of combinations" << "\n"
+         << "   -r <size>      Generate a random sample of size r from" << "\n"
+	 << "                  the possible set of combinations" << "\n"
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n"
          << "   -k             Display the keys on the first line of output" << "\n"
-         << "   -v             Verbosely display all of the combinations to stdout when generating a subset" << "\n"
-         << "                  and an output file has been given" << "\n";
+         << "   -v             Verbosely display all of the combinations to" << "\n"
+	 << "                  stdout when generating a subset and an output" << "\n"
+	 << "                  file has been given" << "\n";
 }
 
 const void display_keys(const vector<string> &keys, const char &delim)
@@ -305,7 +301,6 @@ const void display_results(const vector<string> &row, const vector<string> &keys
     else
     {
         const long key_size = keys.size();
-        const long results_size = row.size();
         cout << "[\n";
         json entry;
         for (long j = 0; j < key_size; ++j)
@@ -394,9 +389,9 @@ const void generate_all(const string &file, const possible_combinations &pc, con
         {
             if (display_keys)
             {
-                for (auto& s: keys)
+                for (auto& s: pc.keys)
                 {
-                    if (&s == &keys.back())
+                    if (&s == &pc.keys.back())
                     {
                         output << s;
                         if (verbose)
@@ -434,7 +429,7 @@ const void generate_all(const string &file, const possible_combinations &pc, con
                     }
                     else
                     {
-                        out << s << delim << ' ';
+                        output << s << delim << ' ';
                         if (verbose)
                         {
                             cout << s << delim << ' ';
@@ -502,9 +497,9 @@ const void generate_all(const string &file, const possible_combinations &pc, con
         {
             if (display_keys)
             {
-                for (auto& s: keys)
+                for (auto& s: pc.keys)
                 {
-                    if (&s == &keys.back())
+                    if (&s == &pc.keys.back())
                     {
                         cout << s;
                     }

@@ -18,12 +18,13 @@
 
 
 using std::cout;
+using std::cin;
+using std::cerr;
 using std::vector;
 using std::string;
 using std::ifstream;
 using std::ofstream;
 using std::istringstream;
-using std::cerr;
 
 using lazycp::lazy_cartesian_product;
 using json = nlohmann::json;
