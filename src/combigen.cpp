@@ -1,6 +1,5 @@
 #include "combigen.h"
 
-
 int main(int argc, char* argv[])
 {
     int c;
@@ -8,18 +7,23 @@ int main(int argc, char* argv[])
     long n = -1;
     bool verbose = false;
     bool generate_subset = false;
+    bool generate_all = false;
     bool display_json = false;
     bool show_keys = false;
     char delim = ',';
     string input, output;
     possible_combinations pc;
-    while( (c = getopt(argc, argv, "hn:i:o:t:r:d:vk")) != -1)
+
+    while( (c = getopt(argc, argv, "han:i:o:t:r:d:vk")) != -1)
     {
         switch(c)
         {
             case 'h':
                 display_help();
                 exit(0);
+            case 'a':
+                generate_all = true;
+                break;
             case 'n':
                 if (optarg)
                 {
@@ -86,6 +90,12 @@ int main(int argc, char* argv[])
     }
 
     pc = parse_input(input);
+    
+    if (generate_all)
+    {
+        generate_all(output, pc, delim, show_keys, display_json, verbose);
+        exit(0);
+    }
 
     if (r == 0 && n > -1)
     {
@@ -126,7 +136,6 @@ int main(int argc, char* argv[])
                         display_keys(pc.keys, delim);
                     }
                     display_results(result, pc.keys,  delim, display_json, show_keys);
-                    cout << "\n" << result.size() << " record(s) written to " << output << "\n";
                }
                else
                {
@@ -148,6 +157,7 @@ const void display_help(void)
 {
     cout << "Usage: combigen [options]" << "\n"
          << "   -h             Displays this help message" << "\n"
+         << "   -a             Generates every possible combination (use with caution)" << "\n"
          << "   -n <index>     Generate combination at nth index" << "\n"
          << "   -i <input>     Take the given .json file or string as input for the combinations" << "\n"
          << "                  Example: \"{ \"foo\": [ \"a\", \"b\", \"c\" ], \"bar\": [ \"1\", \"2\" ] }\"" << "\n"
@@ -371,4 +381,177 @@ const void write_to_file(const string &file, const vector<vector<string>> &resul
         output << "]\n";
     }
     output.close();
+}
+
+const void generate_all(const string &file, const possible_combinations &pc, const char &delim, const bool &display_keys, const bool &display_json, const bool &verbose)
+{
+    if(!file.empty())
+    {
+        long max_size = lazy_cartesian_product::compute_max_size(pc.combinations);
+        ofstream output;
+        output.open(file);
+        if (!display_json)
+        {
+            if (display_keys)
+            {
+                for (auto& s: keys)
+                {
+                    if (&s == &keys.back())
+                    {
+                        output << s;
+                        if (verbose)
+                        {
+                            cout << s;
+                        }
+                    }
+                    else
+                    {
+                        output << s << delim << ' ';
+                        if (verbose)
+                        {
+                            cout << s << delim << ' ';
+                        }
+                    }
+                }
+                output << '\n';
+                if (verbose)
+                {
+                    cout << '\n';
+                }
+            }
+            for (long i = 0; i < max_size; ++i)
+            {
+                vector<string> result = lazy_cartesian_product::entry_at(pc.combinations, i);
+                for (auto &s: result)
+                {
+                    if (&s == &result.back())
+                    {
+                       output << s;
+                       if (verbose)
+                       {
+                           cout << s;
+                       } 
+                    }
+                    else
+                    {
+                        out << s << delim << ' ';
+                        if (verbose)
+                        {
+                            cout << s << delim << ' ';
+                        }
+                    }
+                }
+                output << '\n';
+                if (verbose)
+                {
+                    cout << '\n';
+                }
+            }
+        }
+        else
+        {
+            output << "[\n";
+            if (verbose)
+            {
+                cout << "[\n";
+            }
+            const long key_size = pc.keys.size();
+            for (long i = 0; i < max_size; ++i)
+            {
+                vector<string> entry = lazy_cartesian_product::entry_at(pc.combinations, i);
+                json json_entry;
+                for (long j = 0; j < key_size; ++j)
+                {
+                    json_entry[pc.keys[j]] = entry[j];
+                }
+                output << json_entry.dump(4);
+                if (verbose)
+                {
+                    cout << json_entry.dump(4);
+                }
+                if (i != max_size - 1)
+                {
+                    output << ',';
+                    if (verbose)
+                    {
+                        cout << ',';
+                    }
+                }
+                output << '\n';
+                if (verbose)
+                {
+                    cout << '\n';
+                }
+            }
+            output << "]\n";
+            if (verbose)
+            {
+                cout << "]\n";
+            }
+        }
+        output.close();
+        if (!verbose)
+        {
+            cout << max_size << " record(s) written to " << file << "\n";
+        }
+    }
+    else
+    {
+        long max_size = lazy_cartesian_product::compute_max_size(pc.combinations);
+        if (!display_json)
+        {
+            if (display_keys)
+            {
+                for (auto& s: keys)
+                {
+                    if (&s == &keys.back())
+                    {
+                        cout << s;
+                    }
+                    else
+                    {
+                        cout << s << delim << ' ';
+                    }
+                }
+                cout << '\n';
+            }
+            for (long i = 0; i < max_size; ++i)
+            {
+                vector<string> result = lazy_cartesian_product::entry_at(pc.combinations, i);
+                for (auto &s: result)
+                {
+                    if (&s == &result.back())
+                    {
+                        cout << s;
+                    }
+                    else
+                    {
+                        cout << s << delim << ' ';
+                    }
+                }
+                cout << '\n';
+            }
+        }
+        else
+        {
+            cout << "[\n";
+            const long key_size = pc.keys.size();
+            for (long i = 0; i < max_size; ++i)
+            {
+                vector<string> entry = lazy_cartesian_product::entry_at(pc.combinations, i);
+                json json_entry;
+                for (long j = 0; j < key_size; ++j)
+                {
+                    json_entry[pc.keys[j]] = entry[j];
+                }
+                cout << json_entry.dump(4);
+                if (i != max_size - 1)
+                {
+                    cout << ',';
+                }
+                cout << '\n';
+            }
+            cout << "]\n";
+        }
+    }
 }
