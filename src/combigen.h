@@ -10,7 +10,13 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#include "lib/win-getopt/getopt.h"
+#else
 #include <unistd.h>
+#endif
+
 #include <fstream>
 #include <sstream>
 #include "lib/nlohmann/json/json.hpp"
