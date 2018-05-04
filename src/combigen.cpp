@@ -153,17 +153,17 @@ const void display_help(void)
          << "   -a             Generates every possible combination (use with caution)" << "\n"
          << "   -n <index>     Generate combination at nth index" << "\n"
          << "   -i <input>     Take the given .json file or string as" << "\n"
-	 << "                  input for the combinations." << "\n"
+	     << "                  input for the combinations." << "\n"
          << "                  Example: \"{ \"foo\": [ \"a\", \"b\", \"c\" ], \"bar\": [ \"1\", \"2\" ] }\"" << "\n"
          << "   -o <output>    Write out the results to the file name" << "\n"
          << "   -t <type>      Output type (csv or json). Defaults to csv" << "\n"
          << "   -r <size>      Generate a random sample of size r from" << "\n"
-	 << "                  the possible set of combinations" << "\n"
+	     << "                  the possible set of combinations" << "\n"
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n"
-         << "   -k             Display the keys on the first line of output" << "\n"
+         << "   -k             Display the keys on the first line of output (for .csv)" << "\n"
          << "   -v             Verbosely display all of the combinations to" << "\n"
-	 << "                  stdout when generating a subset and an output" << "\n"
-	 << "                  file has been given" << "\n";
+	     << "                  stdout when generating a subset and an output" << "\n"
+	     << "                  file has been given" << "\n";
 }
 
 const void display_keys(const vector<string> &keys, const char &delim)
