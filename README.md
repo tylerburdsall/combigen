@@ -1,12 +1,12 @@
 # combigen
 An efficient CLI tool to generate possible combinations written in C++
 
-##Introduction
+## Introduction
 Combigen aims to assist with data generation and exploration. Given a `.json` input where each key contains an array of string values, combigen can either generate every possible combination or a random subset of the possible combinations. It aims to be memory-efficient while maintaining high-performance. This can especially useful when large amounts of data are needed for statistical analysis or mock data in an application.
 
 It supports exporting to `.csv` and `.json`.
 
-##Usage
+## Usage
 
 Basic commands are listed below:
 
@@ -30,10 +30,10 @@ Usage: combigen [options]
                   file has been given
 ```
 
-##Installation
+## Installation
 
 
-###Linux/UNIX
+### Linux/UNIX
 
 1. Clone the repository and `cd` into it:
 
@@ -55,7 +55,7 @@ $ sudo make install
 
 Alternatively, you can also check out the [Releases](https://github.com/iamtheburd/combigen/releases) tab and directly download the `combigen` binary from there.
 
-###Windows
+### Windows
 
 
 1. Download Visual Studio and install first
