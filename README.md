@@ -7,7 +7,9 @@ Combigen aims to assist with data generation and exploration. Given a `.json` in
 It supports exporting to `.csv` and `.json`.
 
 ##Usage
+
 Basic commands are listed below:
+
 
 ```
 Usage: combigen [options]
@@ -27,9 +29,12 @@ Usage: combigen [options]
                   stdout when generating a subset and an output
                   file has been given
 ```
+
 ##Installation
 
+
 ###Linux/UNIX
+
 1. Clone the repository and `cd` into it:
 
 ```
@@ -48,7 +53,11 @@ $ make
 $ sudo make install
 ```
 
+Alternatively, you can also check out the [Releases](https://github.com/iamtheburd/combigen/releases) tab and directly download the `combigen` binary from there.
+
 ###Windows
+
+
 1. Download Visual Studio and install first
 
 2. Clone the repository to some directory
@@ -66,6 +75,16 @@ $ sudo make install
 6. Place the resulting `combigen.exe` wherever you desire
 
 Alternatively, you can also check out the [Releases](https://github.com/iamtheburd/combigen/releases) tab and directly download the `combigen.exe` from there.
+
+## Third-Party Libraries
+
+Combigen uses the following open-source libraries:
+
+* [nlohmann/json](https://github.com/nlohmann/json) - An excellent C++ library for parsing JSON
+
+* [iamtheburd/lazy-cartesian-product](https://github.com/iamtheburd/lazy-cartesian-product) - Small C++ library I developed to generate the combinations
+
+* [skandhurkat/Getopt-for-Visual-Studio](https://github.com/skandhurkat/Getopt-for-Visual-Studio) - Port of the CygWin version of `getopt.h` so that the CLI works on Windows
 
 
 ## Contributing
