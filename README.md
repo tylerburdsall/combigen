@@ -84,7 +84,7 @@ Combigen uses the following open-source libraries:
 
 * [iamtheburd/lazy-cartesian-product](https://github.com/iamtheburd/lazy-cartesian-product) - Small C++ library I developed to generate the combinations
 
-* [skandhurkat/Getopt-for-Visual-Studio](https://github.com/skandhurkat/Getopt-for-Visual-Studio) - Port of the CygWin version of `getopt.h` so that the CLI works on Windows
+* [skandhurkat/Getopt-for-Visual-Studio](https://github.com/skandhurkat/Getopt-for-Visual-Studio) - Port of the MinGW version of `getopt.h` so that the CLI works on Windows
 
 
 ## Contributing
