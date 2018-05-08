@@ -293,9 +293,9 @@ static const possible_combinations parse_file(const string &input)
 
 static const possible_combinations parse_stdin(const string &input)
 {
+    possible_combinations pc;
     try
     {
-        possible_combinations pc;
         auto parsed = json::parse(input);
         for (auto obj = parsed.begin(); obj != parsed.end(); ++obj)
         {
@@ -303,7 +303,6 @@ static const possible_combinations parse_stdin(const string &input)
             vector<string> vals = parsed[obj.key()];
             pc.combinations.push_back(vals);
         }
-        return pc;
     }
     catch (nlohmann::detail::type_error)
     {
@@ -319,4 +318,5 @@ static const possible_combinations parse_stdin(const string &input)
     {
         handle_exception(e);
     }
+    return pc;
 }
