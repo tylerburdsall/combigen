@@ -7,7 +7,7 @@
 
 #define COMBIGEN_MAJOR_VERSION 1
 #define COMBIGEN_MINOR_VERSION 1
-#define COMBIGEN_REVISION_VERSION 0
+#define COMBIGEN_REVISION_VERSION 8
 
 #include <iostream>
 #include <iomanip>

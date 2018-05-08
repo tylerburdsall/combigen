@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
     int c;
     generation_args args;
 
-    while( (c = getopt(argc, argv, "han:i:t:r:d:km:")) != -1)
+    while( (c = getopt(argc, argv, "han:i:t:r:d:kmv")) != -1)
     {
         switch(c)
         {
@@ -60,20 +60,11 @@ int main(int argc, char* argv[])
                 args.display_keys = true;
                 break;
             case 'm':
-                if (optarg)
-                {
-                    string s = optarg;
-                    if (s[0] == 'm' || s[0] == 'M')
-                    {
-                        args.perf_mode = false;
-                    }
-                    else if (s[0] != 'p' || s[0] != 'P')
-                    {
-                        display_help();
-                        exit(-1);
-                    }
-                }
+                args.perf_mode = false;
                 break;
+            case 'v':
+                cout << "combigen - v" << COMBIGEN_MAJOR_VERSION << '.' << COMBIGEN_MINOR_VERSION << '.' << COMBIGEN_REVISION_VERSION << '\n';
+                exit(0);
             default: 
                 display_help();
                 exit(-1);
@@ -101,7 +92,7 @@ const void display_help(void)
 {
     cout << "Usage: combigen [options]" << "\n"
          << "   -h             Displays this help message" << "\n\n"
-         << "   -a             Generates every possible combination (use with caution)" << "\n\n"
+         << "   -a             Generates every possible combination ***(USE WITH CAUTION)***" << "\n\n"
          << "   -n <index>     Generate combination at nth index" << "\n\n"
          << "   -i <input>     Take the given .json file or string as" << "\n"
 	     << "                  input for the combinations." << "\n"
@@ -111,17 +102,10 @@ const void display_help(void)
 	     << "                  the possible set of combinations" << "\n\n"
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n\n"
          << "   -k             Display the keys on the first line of output (for .csv)" << "\n\n"
-         << "   -m <mode>      Specify the mode for combigen to run in, " << "\n"
-         << "                  (p)erformance- or (m)emory-oriented (default is performance)" << "\n"
-         << "                      - p: When generating combinations the program will store all of the" << "\n"
-         << "                           combinations in RAM before writing to a file/stdout. This is" << "\n"
-         << "                           recommended for machines with large amounts of RAM and should" << "\n"
-         << "                           offer performance benefits for incredibly large combination generation" << "\n"
-         << "                      - m: Each combination will be generated and then written to a file/stdout" << "\n"
-         << "                           before continuing to the next generation. This is recommended for" << "\n"
-         << "                           with small amounts of RAM when generating large combinations so that" << "\n"
-         << "                           disk space will become the only limiting factor." << "\n\n"
-         << "Version:          " << COMBIGEN_MAJOR_VERSION << '.' << COMBIGEN_MINOR_VERSION << '.' << COMBIGEN_REVISION_VERSION << '\n';
+         << "   -m             Specify the mode for combigen to run in memory-optimzed " << "\n"
+         << "                  mode. This is recommended when the amount of combinations" << "\n"
+         << "                  exceeds the amount of RAM in the laptop." << "\n\n"
+         << "   -v             Display version number" << "\n";
 }
 
 const void display_keys(const vector<string> &keys, const char &delim)
