@@ -255,7 +255,7 @@ const void parse_args(const generation_args &args)
         const long last = n - 1;
         for (long i = 0; i < n; ++i)
         {
-            vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, args.entry_at);
+            vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
             output_results(result, args, true);
             if (args.display_json && i != last)
             {
