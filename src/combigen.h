@@ -52,7 +52,7 @@ struct generation_args
 {
     possible_combinations           pc;
     string                          input;
-    char                            delim = ',';
+    string                          delim = ",";
     long                            entry_at = -1;
     long                            sample_size = 0;
     bool                            generate_all_combinations = false;
@@ -60,8 +60,10 @@ struct generation_args
     bool                            display_json = false;
 };
 
-static const void                   display_csv_keys(const vector<string> &keys, const char &delim);
+static const void                   display_csv_keys(const vector<string> &keys, const string &delim);
 static const void                   display_help(void);
+static const void                   generate_all(const long &max_size, const generation_args &args);
+static const void                   generate_random_samples(const vector<long> &range, const generation_args &args);
 static const void                   output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
 static const void                   parse_args(const generation_args &args);
 static const possible_combinations  parse_file(const string &input);

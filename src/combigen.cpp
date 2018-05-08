@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
             case 'd':
                 if (optarg)
                 {
-                    args.delim = *optarg;
+                    args.delim = optarg;
                 }
                 break;
             case 'k':
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-static const void display_csv_keys(const vector<string> &keys, const char &delim)
+static const void display_csv_keys(const vector<string> &keys, const string &delim)
 {
     for (auto& s: keys)
     {
@@ -137,6 +137,63 @@ static const void display_help(void)
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n\n"
          << "   -k             Display the keys on the first line of output (for .csv)" << "\n\n"
          << "   -v             Display version number" << "\n";
+}
+
+static const void generate_all(const long &max_size, const generation_args &args)
+{
+    if (!args.display_json)
+    {
+        if (args.display_keys)
+        {
+            display_csv_keys(args.pc.keys, args.delim);
+        }
+    }
+    else
+    {
+        cout << "[\n";
+    }
+    const long last = max_size - 1;
+    for (long i = 0; i < max_size; ++i)
+    {
+        vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
+        output_result(result, args, true);
+        if (args.display_json && i != last)
+        {
+            cout << ",";
+        }
+    }
+    if (args.display_json)
+    {
+        cout << "]\n";
+    }
+}
+
+static const void generate_random_samples(const vector<long> &range, const generation_args &args)
+{
+    if (!args.display_json)
+    {
+        if (args.display_keys)
+        {
+            display_csv_keys(args.pc.keys, args.delim);
+        }
+    }
+    else
+    {
+        cout << "[\n";
+    }
+    for (const long &i: range)
+    {
+        vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
+        output_result(result, args, true);
+        if (args.display_json && &i != &range.back())
+        {
+            cout << ",";
+        }
+    }
+    if (args.display_json)
+    {
+        cout << "]\n";
+    }
 }
 
 static const void output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization)
@@ -183,10 +240,10 @@ static const void output_result(const vector<string> &result, const generation_a
 static const void parse_args(const generation_args &args)
 {
     long max_size = lazy_cartesian_product::compute_max_size(args.pc.combinations);
-    long n = 0;
     if (args.generate_all_combinations)
     {
-        n = max_size;
+        generate_all(max_size, args);
+        exit(0);
     }
     else
     {
@@ -198,12 +255,15 @@ static const void parse_args(const generation_args &args)
         }
         else if (args.sample_size > 0)
         {
-            n = args.sample_size;
+            const long n = args.sample_size;
             if (n > max_size)
             {
                 cerr << "ERROR: Sample size cannot be greater than maximum possible combinations\n";
                 exit(-1);
             }
+            vector<long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
+            generate_random_samples(range, args);
+            exit(0);
         }
         else
         {
@@ -211,32 +271,6 @@ static const void parse_args(const generation_args &args)
             exit(-1);
         }
     }
-    if (!args.display_json)
-    {
-        if (args.display_keys)
-        {
-            display_csv_keys(args.pc.keys, args.delim);
-        }
-    }
-    else
-    {
-        cout << "[\n";
-    }
-    const long last = n - 1;
-    for (long i = 0; i < n; ++i)
-    {
-        vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
-        output_result(result, args, true);
-        if (args.display_json && i != last)
-        {
-            cout << ",";
-        }
-    }
-    if (args.display_json)
-    {
-        cout << "]\n";
-    }
-    exit(0);
 }
 
 static const possible_combinations parse_file(const string &input)
