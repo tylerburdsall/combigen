@@ -109,7 +109,7 @@ It's recommended to use your OS's built-in output redirection to write out to a 
 
 ```
 $ combigen -i example_data/combinations.json -r 50000 > output.txt  # Generate 50,000 random combinations
-                                                                      and store them in output.txt
+                                                                    # and store them in output.txt
 ```
 
 
@@ -137,7 +137,7 @@ You can also change the delimiter with the `-d` flag:
 
 ```
 $ combigen -i example_data/combinations.json -r 3 -k -d "|"  # Generate 3 random combinations, display the keys,
-                                                               and set the delimiter to ||
+                                                             # and set the delimiter to ||
 Age||First Name||Last Name||Number of Children||Number of Pets||Primary Desktop OS||Primary Mobile Phone OS||Residence||State/Territory
 20||Samantha||Harris||3||4||Windows||Other||RV||GA
 25||Matthew||Thomas||2||0||Windows||Other||Town Home||IL
