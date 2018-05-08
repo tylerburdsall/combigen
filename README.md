@@ -15,12 +15,13 @@ Basic commands are listed below:
 Usage: combigen [options]
    -h             Displays this help message
 
-   -a             Generates every possible combination ***(USE WITH CAUTION)***
+   -a             Generates every possible combination
+                  (Note: this should be used with caution when storing to disk)
 
    -n <index>     Generate combination at nth index
 
-   -i <input>     Take the given .json file or string as
-                  input for the combinations.
+   -i <input>     Take the given .json file as input. Otherwise, input will come
+                  from stdin.
                   Example: "{ "foo": [ "a", "b", "c" ], "bar": [ "1", "2" ] }"
 
    -t <type>      Output type (csv or json). Defaults to csv
@@ -31,10 +32,6 @@ Usage: combigen [options]
    -d <delimiter> Set the delimiter when displaying combinations (default is ',')
 
    -k             Display the keys on the first line of output (for .csv)
-
-   -m             Specify the mode for combigen to run in memory-optimzed
-                  mode. This is recommended when the amount of combinations
-                  exceeds the amount of RAM in the laptop.
 
    -v             Display version number
 ```
@@ -78,7 +75,7 @@ Alternatively, you can also check out the [Releases](https://github.com/iamthebu
 5. Build the file:
 
 ```
-> cl src\combigen.cpp /EHsc
+> cl src\combigen.cpp /EHsc /O2
 ```
 
 6. Place the resulting `combigen.exe` wherever you desire
