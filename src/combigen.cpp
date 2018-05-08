@@ -82,10 +82,32 @@ int main(int argc, char* argv[])
     {
         parse_args(args);
     }
+    catch (const lazycp::errors::index_error&)
+    {
+        cerr << "ERROR: the given index cannot be out of range\n";
+    }
+    catch (const lazycp::errors::empty_list_error&)
+    {
+        cerr << "ERROR: an empty list cannot be a value for a key\n";
+    }
+    catch (const lazycp::errors::empty_answers_error&)
+    {
+        cerr << "ERROR: an empty list cannot be a value for a key\n";
+    }
+    catch (const lazycp::errors::invalid_sample_size_error&)
+    {
+        cerr << "ERROR: the given sample size cannot be out of range\n";
+    }
+    catch (...)
+    {
+        cerr << "ERROR: an unknown error occurred\n";
+    }
+    /*
     catch (runtime_error e)
     {
         handle_exception(e);
-    }
+    }*/
+    return 0;
 }
 
 static const void display_csv_keys(const vector<string> &keys, const char &delim)
@@ -128,19 +150,19 @@ static const void handle_exception(const runtime_error &e)
     {
         throw e;
     }
-    catch (lazycp::errors::index_error)
+    catch (const lazycp::errors::index_error&)
     {
         cerr << "ERROR: the given index cannot be out of range\n";
     }
-    catch (lazycp::errors::empty_list_error)
+    catch (const lazycp::errors::empty_list_error&)
     {
         cerr << "ERROR: an empty list cannot be a value for a key\n";
     }
-    catch (lazycp::errors::empty_answers_error)
+    catch (const lazycp::errors::empty_answers_error&)
     {
         cerr << "ERROR: an empty list cannot be a value for a key\n";
     }
-    catch (lazycp::errors::invalid_sample_size_error)
+    catch (const lazycp::errors::invalid_sample_size_error&)
     {
         cerr << "ERROR: the given sample size cannot be out of range\n";
     }
@@ -204,16 +226,23 @@ static const void parse_args(const generation_args &args)
     {
         if (args.sample_size == 0 && args.entry_at > -1 && !args.generate_all_combinations)
         {
-            try
+            if (args.entry_at > max_size)
             {
+                cerr << "Error: Given index cannot be out of range\n";
+                exit(-1);
+            }
+            /*
+            try
+            {*/
                 vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, args.entry_at);
                 output_result(result, args, false);
                 exit(0);
-            }
-            catch (runtime_error e)
+            //}
+            /*
+            catch (const runtime_error &e)
             {
                 handle_exception(e);
-            }
+            }*/
         }
         else if (args.sample_size > 0)
         {
@@ -260,9 +289,9 @@ static const void parse_args(const generation_args &args)
 
 static const possible_combinations parse_file(const string &input)
 {
+    possible_combinations pc;
     try
     {
-        possible_combinations pc;
         ifstream i(input);
         json json_file;
         i >> json_file;
@@ -273,22 +302,23 @@ static const possible_combinations parse_file(const string &input)
             vector<string> vals = json_file[obj.key()];
             pc.combinations.push_back(vals);
         }
-        return pc;
     }
-    catch (nlohmann::detail::parse_error)
+    catch (const nlohmann::detail::parse_error&)
     {
         cerr << "ERROR: Couldn't parse the given file, please ensure the file is in valid .json format and is accessible." << '\n';
         exit(-1);
     }
-    catch (nlohmann::detail::type_error)
+    catch (const nlohmann::detail::type_error&)
     {
         cerr << "ERROR: All values in input must be an array containing strings" << '\n';
         exit(-1);
     }
-    catch (runtime_error e)
+    /*
+    catch (const runtime_error &e)
     {
         handle_exception(e);
-    }
+    }*/
+    return pc;
 }
 
 static const possible_combinations parse_stdin(const string &input)
@@ -304,19 +334,20 @@ static const possible_combinations parse_stdin(const string &input)
             pc.combinations.push_back(vals);
         }
     }
-    catch (nlohmann::detail::type_error)
+    catch (const nlohmann::detail::type_error&)
     {
         cerr << "ERROR: All values in input must be an array containing strings" << '\n';
         exit(-1);
     }
-    catch (nlohmann::detail::parse_error)
+    catch (const nlohmann::detail::parse_error&)
     {
         cerr << "ERROR: Unable to parse the given input, please ensure a valid .json input has been provided" << '\n';
         exit(-1);
     }
-    catch (runtime_error e)
+    /*
+    catch (const runtime_error &e)
     {
         handle_exception(e);
-    }
+    }*/
     return pc;
 }
