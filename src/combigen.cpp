@@ -208,7 +208,7 @@ const void parse_args(const generation_args &args)
         else if (args.sample_size > 0)
         {
             n = args.sample_size;
-            if (n >= max_size)
+            if (n > max_size)
             {
                 cerr << "ERROR: Sample size cannot be greater than maximum possible combinations\n";
                 exit(-1);
