@@ -5,6 +5,10 @@
 #ifndef COMBIGEN
 #define COMBIGEN
 
+#define COMBIGEN_MAJOR_VERSION 1
+#define COMBIGEN_MINOR_VERSION 1
+#define COMBIGEN_REVISION_VERSION 0
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -29,7 +33,6 @@ using std::cerr;
 using std::vector;
 using std::string;
 using std::ifstream;
-using std::ofstream;
 using std::istringstream;
 
 using lazycp::lazy_cartesian_product;
@@ -37,22 +40,28 @@ using json = nlohmann::json;
 
 struct possible_combinations
 {
-    vector<string> keys;
-    vector<vector<string>> combinations;
+    vector<string>          keys;
+    vector<vector<string>>  combinations;
 };
 
-const void display_help(void);
+struct generation_args
+{
+    possible_combinations   pc;
+    bool                    perf_mode = true;
+    string                  input;
+    char                    delim = ',';
+    long                    entry_at = -1;
+    long                    sample_size = 0;
+    bool                    generate_all_combinations = false;
+    bool                    display_keys = false;
+    bool                    display_json = false;
+};
 
-const void display_keys(const vector<string> &keys, const char &delim);
-
+const void                  display_help(void);
+const void                  display_keys(const vector<string> &keys, const char &delim);
 const possible_combinations parse_input(const string &input);
-
-const void display_results(const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys);
-
-const void display_results(const vector<string >&row, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys);
-
-const void write_to_file(const string &file, const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_keys, const bool &display_json);
-
-const void generate_all(const string &file, const possible_combinations &pc, const char &delim, const bool &display_keys, const bool &display_json, const bool &verbose);
+const void                  parse_args(const generation_args &args);
+const void                  output_results(const vector<vector<string>> &results, const generation_args &args);
+const void                  output_results(const vector<string> &row, const generation_args &args, const bool &for_optimization);
 
 #endif
