@@ -62,7 +62,6 @@ struct generation_args
 
 static const void                   display_csv_keys(const vector<string> &keys, const char &delim);
 static const void                   display_help(void);
-static const void                   handle_exception(const runtime_error &e);
 static const void                   output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
 static const void                   parse_args(const generation_args &args);
 static const possible_combinations  parse_file(const string &input);

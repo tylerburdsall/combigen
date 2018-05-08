@@ -102,11 +102,6 @@ int main(int argc, char* argv[])
     {
         cerr << "ERROR: an unknown error occurred\n";
     }
-    /*
-    catch (runtime_error e)
-    {
-        handle_exception(e);
-    }*/
     return 0;
 }
 
@@ -142,35 +137,6 @@ static const void display_help(void)
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n\n"
          << "   -k             Display the keys on the first line of output (for .csv)" << "\n\n"
          << "   -v             Display version number" << "\n";
-}
-
-static const void handle_exception(const runtime_error &e)
-{
-    try 
-    {
-        throw e;
-    }
-    catch (const lazycp::errors::index_error&)
-    {
-        cerr << "ERROR: the given index cannot be out of range\n";
-    }
-    catch (const lazycp::errors::empty_list_error&)
-    {
-        cerr << "ERROR: an empty list cannot be a value for a key\n";
-    }
-    catch (const lazycp::errors::empty_answers_error&)
-    {
-        cerr << "ERROR: an empty list cannot be a value for a key\n";
-    }
-    catch (const lazycp::errors::invalid_sample_size_error&)
-    {
-        cerr << "ERROR: the given sample size cannot be out of range\n";
-    }
-    catch (...)
-    {
-        cerr << "ERROR: an unknown error occurred\n";
-    }
-    exit(-1);
 }
 
 static const void output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization)
@@ -226,23 +192,9 @@ static const void parse_args(const generation_args &args)
     {
         if (args.sample_size == 0 && args.entry_at > -1 && !args.generate_all_combinations)
         {
-            if (args.entry_at > max_size)
-            {
-                cerr << "Error: Given index cannot be out of range\n";
-                exit(-1);
-            }
-            /*
-            try
-            {*/
-                vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, args.entry_at);
-                output_result(result, args, false);
-                exit(0);
-            //}
-            /*
-            catch (const runtime_error &e)
-            {
-                handle_exception(e);
-            }*/
+            vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, args.entry_at);
+            output_result(result, args, false);
+            exit(0);
         }
         else if (args.sample_size > 0)
         {
@@ -313,11 +265,6 @@ static const possible_combinations parse_file(const string &input)
         cerr << "ERROR: All values in input must be an array containing strings" << '\n';
         exit(-1);
     }
-    /*
-    catch (const runtime_error &e)
-    {
-        handle_exception(e);
-    }*/
     return pc;
 }
 
@@ -344,10 +291,5 @@ static const possible_combinations parse_stdin(const string &input)
         cerr << "ERROR: Unable to parse the given input, please ensure a valid .json input has been provided" << '\n';
         exit(-1);
     }
-    /*
-    catch (const runtime_error &e)
-    {
-        handle_exception(e);
-    }*/
     return pc;
 }
