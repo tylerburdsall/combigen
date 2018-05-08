@@ -132,15 +132,15 @@ static const void handle_exception(const runtime_error &e)
     {
         cerr << "ERROR: the given index cannot be out of range\n";
     }
-    catch (lazycp::errors::empty_list)
+    catch (lazycp::errors::empty_list_error)
     {
         cerr << "ERROR: an empty list cannot be a value for a key\n";
     }
-    catch (lazycp::errors::empty_answers)
+    catch (lazycp::errors::empty_answers_error)
     {
         cerr << "ERROR: an empty list cannot be a value for a key\n";
     }
-    catch (lazycp::errors::invalid_sample_size)
+    catch (lazycp::errors::invalid_sample_size_error)
     {
         cerr << "ERROR: the given sample size cannot be out of range\n";
     }
