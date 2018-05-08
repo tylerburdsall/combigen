@@ -8,8 +8,8 @@
 #ifndef _LAZY_CARTESIAN_PRODUCT
 #define _LAZY_CARTESIAN_PRODUCT
 
-#define MAJOR_VERSION 1
-#define MINOR_VERSION 0
+#define LCP_MAJOR_VERSION 1
+#define LCP_MINOR_VERSION 1
 
 #include <string>
 #include <vector>
@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <fstream>
 #include <unordered_set>
+#include <stdexcept>
 
 
 using std::fstream;
@@ -28,9 +29,34 @@ using std::string;
 using std::uniform_int_distribution;
 using std::unordered_set;
 using std::vector;
+using std::runtime_error;
 
 namespace lazycp
 {
+namespace errors
+{
+	struct index_error: public runtime_error
+	{
+		index_error::index_error(): runtime_error("The given index cannot be out of range") {}
+	};
+	struct empty_list_error: public runtime_error
+	{
+		empty_list_error::empty_list_error(): runtime_error("The given list of combinations cannot be empty") {}
+	};
+	struct empty_answers_error: public runtime_error
+	{
+		empty_answers_error::empty_answers_error(): runtime_error("The given list of answers cannot be empty") {}
+	};
+	struct invalid_sample_size_error: public runtime_error
+	{
+		invalid_sample_size_error::invalid_sample_size_error(): runtime_error("The given sample size cannot be out of range") {}
+	};
+}
+}
+
+namespace lazycp
+{
+	
 	struct precomputed_stats
 	{
 		vector<long> divs;
@@ -44,9 +70,9 @@ namespace lazycp
 		static const vector<string> entry_at(const vector<vector<string>> &combinations, const long &index)
 		{
 			const precomputed_stats pc = precompute(combinations);
-			if (index  < 0 || index >= pc.max_size)
+			if (index  < 0 || index > pc.max_size)
 			{
-				throw "Entry cannot be out of range";
+				throw errors::index_error();
 			}
 
 			const vector<string> combination = entry_at(combinations, index, pc);
@@ -57,15 +83,25 @@ namespace lazycp
 		{
 			if (combinations.size() == 0)
 			{
-				throw "The given list of combinations cannot be 0";
+				throw errors::empty_list_error();
 			}
 			precomputed_stats ps = precompute(combinations);
 
-			vector<long> sampled_indicies = generate_random_indices(sample_size, ps.max_size);
 			vector<vector<string>> subset;
-			for (const long &i : sampled_indicies)
+			if (sample_size != ps.max_size)
 			{
-				subset.push_back(entry_at(combinations, i, ps));
+				vector<long> sampled_indicies = generate_random_indices(sample_size, ps.max_size);
+				for (const long &i : sampled_indicies)
+				{
+					subset.push_back(entry_at(combinations, i, ps));
+				}
+			}
+			else
+			{
+				for (long i = 0; i < sample_size; ++i)
+				{
+					subset.push_back(entry_at(combinations, i, ps));
+				}
 			}
 
 			return subset;
@@ -82,36 +118,11 @@ namespace lazycp
 			return size;
 		}
 
-	private:
-		static const precomputed_stats precompute(const vector<vector<string>> &combinations)
-		{
-			precomputed_stats ps;
-			if (combinations.size() == 0)
-			{
-				throw "The amount of answers cannot be 0";
-			}
-
-			long size = combinations.size();
-			ps.divs.resize(size);
-			ps.mods.resize(size);
-			long factor = 1;
-
-			for (int i = size - 1; i >= 0; --i)
-			{
-				long items = combinations[i].size();
-				ps.divs[i] = factor;
-				ps.mods[i] = items;
-				factor *= items;
-			}
-
-			ps.max_size = compute_max_size(combinations);
-			return ps;
-		}
 		static const vector<long> generate_random_indices(const long &sample_size, const long &max_size)
 		{
-			if (sample_size >= max_size)
+			if (sample_size > max_size)
 			{
-				throw "Sample size cannot be larger than possible size";
+				throw errors::invalid_sample_size_error();
 			}
 
 			vector<long> random_indices;
@@ -130,6 +141,32 @@ namespace lazycp
 
 			return random_indices;
 		}
+	private:
+		static const precomputed_stats precompute(const vector<vector<string>> &combinations)
+		{
+			precomputed_stats ps;
+			if (combinations.size() == 0)
+			{
+				throw errors::empty_answers_error();
+			}
+
+			long size = combinations.size();
+			ps.divs.resize(size);
+			ps.mods.resize(size);
+			long factor = 1;
+
+			for (int i = size - 1; i >= 0; --i)
+			{
+				long items = combinations[i].size();
+				ps.divs[i] = factor;
+				ps.mods[i] = items;
+				factor *= items;
+			}
+
+			ps.max_size = compute_max_size(combinations);
+			return ps;
+		}
+		
 		static const bool sample_size_valid(const long &sample, const long &max_size)
 		{
 			return sample <= max_size;
@@ -151,4 +188,5 @@ namespace lazycp
 		lazy_cartesian_product() {}
 	};
 }
+
 #endif

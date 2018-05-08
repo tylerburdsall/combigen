@@ -5,11 +5,17 @@
 #ifndef COMBIGEN
 #define COMBIGEN
 
+#define COMBIGEN_MAJOR_VERSION 1
+#define COMBIGEN_MINOR_VERSION 2
+#define COMBIGEN_REVISION_VERSION 0
+
 #include <iostream>
+#include <iterator>
 #include <iomanip>
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <stdexcept>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "lib/win-getopt/getopt.h"
@@ -29,30 +35,38 @@ using std::cerr;
 using std::vector;
 using std::string;
 using std::ifstream;
-using std::ofstream;
 using std::istringstream;
+using std::istreambuf_iterator;
+using std::runtime_error;
 
 using lazycp::lazy_cartesian_product;
 using json = nlohmann::json;
 
 struct possible_combinations
 {
-    vector<string> keys;
-    vector<vector<string>> combinations;
+    vector<string>                  keys;
+    vector<vector<string>>          combinations;
 };
 
-const void display_help(void);
+struct generation_args
+{
+    possible_combinations           pc;
+    string                          input;
+    string                          delim = ",";
+    long                            entry_at = -1;
+    long                            sample_size = 0;
+    bool                            generate_all_combinations = false;
+    bool                            display_keys = false;
+    bool                            display_json = false;
+};
 
-const void display_keys(const vector<string> &keys, const char &delim);
-
-const possible_combinations parse_input(const string &input);
-
-const void display_results(const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys);
-
-const void display_results(const vector<string >&row, const vector<string> &keys, const char &delim, const bool &display_json, const bool &show_keys);
-
-const void write_to_file(const string &file, const vector<vector<string>> &results, const vector<string> &keys, const char &delim, const bool &display_keys, const bool &display_json);
-
-const void generate_all(const string &file, const possible_combinations &pc, const char &delim, const bool &display_keys, const bool &display_json, const bool &verbose);
+static const void                   display_csv_keys(const vector<string> &keys, const string &delim);
+static const void                   display_help(void);
+static const void                   generate_all(const long &max_size, const generation_args &args);
+static const void                   generate_random_samples(const vector<long> &range, const generation_args &args);
+static const void                   output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
+static const void                   parse_args(const generation_args &args);
+static const possible_combinations  parse_file(const string &input);
+static const possible_combinations  parse_stdin(const string &input);
 
 #endif
