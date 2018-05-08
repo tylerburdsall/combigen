@@ -4,7 +4,6 @@ int main(int argc, char* argv[])
 {
     int c;
     generation_args args;
-    string input, output;
 
     while( (c = getopt(argc, argv, "han:i:t:r:d:km:")) != -1)
     {
@@ -87,7 +86,15 @@ int main(int argc, char* argv[])
     }
 
     args.pc = parse_input(args.input);
-    parse_args(args);
+    try
+    {
+        parse_args(args);
+    }
+    catch (const char* e)
+    {
+        cerr << e << "\n";
+        exit(-1);
+    }
 }
 
 const void display_help(void)
@@ -178,6 +185,11 @@ const possible_combinations parse_input(const string &input)
             cerr << "ERROR: All values in input must be an array containing strings" << '\n';
             exit(-1);
         }
+    }
+    catch (const char* e)
+    {
+        cerr << e << "\n";
+        exit(-1);
     }
 }
 
