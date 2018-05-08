@@ -15,6 +15,7 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <stdexcept>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "lib/win-getopt/getopt.h"
@@ -36,6 +37,7 @@ using std::string;
 using std::ifstream;
 using std::istringstream;
 using std::istreambuf_iterator;
+using std::runtime_error;
 
 using lazycp::lazy_cartesian_product;
 using json = nlohmann::json;
@@ -60,7 +62,7 @@ struct generation_args
 
 static const void                   display_csv_keys(const vector<string> &keys, const char &delim);
 static const void                   display_help(void);
-static const void                   handle_exception(const exception &e);
+static const void                   handle_exception(const runtime_error &e);
 static const void                   output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
 static const void                   parse_args(const generation_args &args);
 static const possible_combinations  parse_file(const string &input);

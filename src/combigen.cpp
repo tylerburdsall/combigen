@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
     {
         parse_args(args);
     }
-    catch (exception e)
+    catch (runtime_error e)
     {
         handle_exception(e);
     }
@@ -122,9 +122,32 @@ static const void display_help(void)
          << "   -v             Display version number" << "\n";
 }
 
-static const void handle_exception(const exception &e)
+static const void handle_exception(const runtime_error &e)
 {
-    cerr << "ERROR: " << e.what() << "\n";
+    try 
+    {
+        throw e;
+    }
+    catch (lazycp::errors::index_error)
+    {
+        cerr << "ERROR: the given index cannot be out of range\n";
+    }
+    catch (lazycp::errors::empty_list)
+    {
+        cerr << "ERROR: an empty list cannot be a value for a key\n";
+    }
+    catch (lazycp::errors::empty_answers)
+    {
+        cerr << "ERROR: an empty list cannot be a value for a key\n";
+    }
+    catch (lazycp::errors::invalid_sample_size)
+    {
+        cerr << "ERROR: the given sample size cannot be out of range\n";
+    }
+    catch (...)
+    {
+        cerr << "ERROR: an unknown error occurred\n";
+    }
     exit(-1);
 }
 
@@ -187,7 +210,7 @@ static const void parse_args(const generation_args &args)
                 output_result(result, args, false);
                 exit(0);
             }
-            catch (exception e)
+            catch (runtime_error e)
             {
                 handle_exception(e);
             }
@@ -262,7 +285,7 @@ static const possible_combinations parse_file(const string &input)
         cerr << "ERROR: All values in input must be an array containing strings" << '\n';
         exit(-1);
     }
-    catch (exception e)
+    catch (runtime_error e)
     {
         handle_exception(e);
     }
@@ -292,7 +315,7 @@ static const possible_combinations parse_stdin(const string &input)
         cerr << "ERROR: Unable to parse the given input, please ensure a valid .json input has been provided" << '\n';
         exit(-1);
     }
-    catch (exception e)
+    catch (runtime_error e)
     {
         handle_exception(e);
     }
