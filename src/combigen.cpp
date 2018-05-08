@@ -82,10 +82,9 @@ int main(int argc, char* argv[])
     {
         parse_args(args);
     }
-    catch (const char* e)
+    catch (exception e)
     {
-        cerr << e << "\n";
-        exit(-1);
+        handle_exception(e);
     }
 }
 
@@ -123,6 +122,11 @@ static const void display_help(void)
          << "   -v             Display version number" << "\n";
 }
 
+static const void handle_exception(const exception &e)
+{
+    cerr << "ERROR: " << e.what() << "\n";
+    exit(-1);
+}
 
 static const void output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization)
 {
@@ -183,10 +187,9 @@ static const void parse_args(const generation_args &args)
                 output_result(result, args, false);
                 exit(0);
             }
-            catch (char const* e)
+            catch (exception e)
             {
-                cerr << "ERROR: " << e << "\n";
-                exit(-1);
+                handle_exception(e);
             }
         }
         else if (args.sample_size > 0)
@@ -259,6 +262,10 @@ static const possible_combinations parse_file(const string &input)
         cerr << "ERROR: All values in input must be an array containing strings" << '\n';
         exit(-1);
     }
+    catch (exception e)
+    {
+        handle_exception(e);
+    }
 }
 
 static const possible_combinations parse_stdin(const string &input)
@@ -284,5 +291,9 @@ static const possible_combinations parse_stdin(const string &input)
     {
         cerr << "ERROR: Unable to parse the given input, please ensure a valid .json input has been provided" << '\n';
         exit(-1);
+    }
+    catch (exception e)
+    {
+        handle_exception(e);
     }
 }
