@@ -2,7 +2,8 @@
 
 int main(int argc, char* argv[])
 {
-    int c;
+    int             c;
+    bool            args_provided = false;
     generation_args args;
 
     while ( (c = getopt(argc, argv, "han:i:t:r:d:kv")) != -1)
@@ -13,6 +14,7 @@ int main(int argc, char* argv[])
                 display_help();
                 exit(0);
             case 'a':
+                args_provided = true;
                 args.generate_all_combinations = true;
                 break;
             case 'n':
@@ -20,17 +22,20 @@ int main(int argc, char* argv[])
                 {
                     istringstream iss (optarg);
                     iss >> args.entry_at;
+                    args_provided = true;
                 }
                 break;
             case 'i':
                 if (optarg)
                 {
                     args.input = optarg;
+                    args_provided = true;
                 }
                 break;
             case 't':
                 if (optarg)
                 {
+                    args_provided = true;
                     string s = optarg;
                     if (s == "json")
                     {
@@ -46,6 +51,7 @@ int main(int argc, char* argv[])
             case 'r':
                 if (optarg)
                 {
+                    args_provided = true;
                     istringstream iss (optarg);
                     iss >> args.sample_size;
                 }
@@ -53,10 +59,12 @@ int main(int argc, char* argv[])
             case 'd':
                 if (optarg)
                 {
+                    args_provided = true;
                     args.delim = optarg;
                 }
                 break;
             case 'k':
+                args_provided = true;
                 args.display_keys = true;
                 break;
             case 'v':
@@ -66,6 +74,11 @@ int main(int argc, char* argv[])
                 display_help();
                 exit(-1);
         }
+    }
+    if (!args.provided)
+    {
+        display_help();
+        exit(0);
     }
     if (args.input.empty())
     {
