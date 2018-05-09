@@ -15,7 +15,7 @@ Basic commands are listed below:
 Usage: combigen [options]
    -h             Displays this help message
 
-   -a             Generates every possible combination
+   -a             Generates every possible combination, restricted to memory mode.
                   (Note: this should be used with caution when storing to disk)
 
    -n <index>     Generate combination at nth index
@@ -32,6 +32,11 @@ Usage: combigen [options]
    -d <delimiter> Set the delimiter when displaying combinations (default is ',')
 
    -k             Display the keys on the first line of output (for .csv)
+
+   -p             Use performance mode to generate combinations faster at the
+                  expense of higher RAM usage.
+                  (Note: this is only recommended for computers with large amounts
+                  of RAM when generating a large number of random combinations)
 
    -v             Display version number
 ```
@@ -102,6 +107,7 @@ Or you can feed in an input from `stdin`:
 $ cat example_data/combinations.json | combigen -n 100  # Find the combination at index 100
 ```
 
+Alternatively, if you want to manually type in your string, the program will await user input until EOF. For Windows, this is `CTRL+Z`. For Linux/UNIX, this is `CTRL+D`.
 
 ### Output
 
@@ -207,6 +213,51 @@ $ combigen -i example_data/combinations.json -r 5 -t json  # Generate 5 random c
 $
 ```
 
+## Using Performance Mode
+
+When generating a large number of combinations, there come a desire to speed up the process. For this case, use the `-p` flag to set combigen to switch to Performance Mode. This will generate all of the combinations at once before outputting them to `stdout`. **Note: this is only recommended for systems with a large amount of RAM when generating incredibly large sets of data**.
+
+This begins to make a difference when the generated sets of data start to become quite large, as opposed to the default Memory Mode. See the results of some tests below for more information.
+
+For now, when generating every possible combination this will be performed in Memory Mode to save RAM space.
+
+### Performance Tests
+
+To visualize the performance differences between Memory Mode and Performance Mode, a small test was performed to illustrate where Performance Mode begins to offer a significant advantage.
+
+#### Testing Parameters
+
+Each iteration of a test would time the amount of time it takes to generate *n* amount of random combinations and write them to disk; 5 times each. Then, for each amount of *n*, the average of these 5 iterations would be recorded and graphed.
+
+The following tests were performed on a Lenovo ThinkPad T460 with the following specs:
+
+* Windows 7 Enterprise
+* 256GB SSD w/full disk encryption
+* 8GB Ram
+* Intel Core i5 - 6300U @ 2.40GHz
+
+The environment was tested with the following:
+
+* Compiled with Visual Studio Developer Tools 2017 with the compile flags listed above
+* Git Bash as a shell to utilize the UNIX `time` function
+* Each iteration was generated using the command `time ./combigen.exe -i example_data/combinations.json -r "$n" # amount of random combinations > output.txt`
+
+The source code for these shell scripts can be found in the [peformance_tests](performance_tests/) folder.
+
+#### Testing Results
+
+The results from the test were graphed:
+
+![Testing Results](performance_tests/performance-mode-vs-memory-mode-test-results.png)
+
+#### Conclusion
+
+Based on the results above, Performance Mode will only start to offer real benefits when the amount of combinations is quite large. However, this should only be used when the computer can truly handle storing all of these combinations in RAM. Ultimately, it boils down to two factors:
+
+* If you can spare time and don't want to bog down your machine (or the amount of generated combinations is small), stick with the default Memory Mode
+* If you have a well-spec'd machine and can sacrifice the RAM when generating a large amount of combinations, choose Performance Mode.
+
+Regardless, a large amount of combinations requires a large amount of disk space, so keep this into account when generating data.
 
 ## Third-Party Libraries
 
@@ -223,4 +274,4 @@ Combigen uses the following open-source libraries:
 Pull-requests are always welcome
 
 ## License
-Licensed under GPLv3, see [LICENSE](https://github.com/iamtheburd/blob/master/LICENSE)
+Licensed under GPLv3, see [LICENSE](https://github.com/iamtheburd/combigen/blob/master/LICENSE)

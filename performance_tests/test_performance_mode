@@ -1,0 +1,13 @@
+#!/bin/bash
+
+for amount in 100000 500000 1000000 1500000 2000000 2500000 3000000 
+do
+	for i in {1..5}
+	do
+		echo "$amount - $i";
+		time ./combigen.exe -i example_data/combinations.json -r "$amount" -k -p > output.txt
+		echo 
+	done
+done
+rm output.txt
+

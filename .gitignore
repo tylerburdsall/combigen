@@ -2,3 +2,4 @@ build/*.o
 combigen
 combigen.exe
 combigen.obj
+*.txt
