@@ -242,13 +242,13 @@ The environment was tested with the following:
 * Git Bash as a shell to utilize the UNIX `time` function
 * Each iteration was generated using the command `time ./combigen.exe -i example_data/combinations.json -r "$n" # amount of random combinations > output.txt`
 
-The source code for these shell scripts can be found in the (peformance_tests)[https://github.com/iamtheburd/combigen/blob/master/performance_tests] folder.
+The source code for these shell scripts can be found in the [peformance_tests](performance_tests/) folder.
 
 #### Testing Results
 
 The results from the test were graphed:
 
-![Testing Results](https://github.com/iamtheburd/blob/master/performance_tests/performance-mode-vs-memory-mode-test-results.png)
+![Testing Results](performance_tests/performance-mode-vs-memory-mode-test-results.png)
 
 #### Conclusion
 
