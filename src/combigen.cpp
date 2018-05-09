@@ -6,7 +6,8 @@ int main(int argc, char* argv[])
     bool            args_provided = false;
     generation_args args;
 
-    while ( (c = getopt(argc, argv, "han:i:t:r:d:kv")) != -1)
+
+    while ( (c = getopt(argc, argv, "han:i:t:r:d:kvp")) != -1)
     {
         switch (c)
         {
@@ -35,7 +36,6 @@ int main(int argc, char* argv[])
             case 't':
                 if (optarg)
                 {
-                    args_provided = true;
                     string s = optarg;
                     if (s == "json")
                     {
@@ -51,31 +51,32 @@ int main(int argc, char* argv[])
             case 'r':
                 if (optarg)
                 {
-                    args_provided = true;
                     istringstream iss (optarg);
                     iss >> args.sample_size;
+                    args_provided = true;
                 }
                 break;
             case 'd':
                 if (optarg)
                 {
-                    args_provided = true;
                     args.delim = optarg;
                 }
                 break;
             case 'k':
                 args_provided = true;
-                args.display_keys = true;
                 break;
             case 'v':
                 cout << "combigen - v" << COMBIGEN_MAJOR_VERSION << '.' << COMBIGEN_MINOR_VERSION << '.' << COMBIGEN_REVISION_VERSION << '\n';
                 exit(0);
+            case 'p':
+                args.perf_mode = true;
+                break;
             default: 
                 display_help();
                 exit(-1);
         }
     }
-    if (!args.provided)
+    if (!args_provided)
     {
         display_help();
         exit(0);
@@ -91,6 +92,7 @@ int main(int argc, char* argv[])
     {
         args.pc = parse_file(args.input);
     }
+    
     try
     {
         parse_args(args);
@@ -138,7 +140,7 @@ static const void display_help(void)
 {
     cout << "Usage: combigen [options]" << "\n"
          << "   -h             Displays this help message" << "\n\n"
-         << "   -a             Generates every possible combination" << "\n"
+         << "   -a             Generates every possible combination, restricted to memory mode." << "\n"
          << "                  (Note: this should be used with caution when storing to disk)" << "\n\n"
          << "   -n <index>     Generate combination at nth index" << "\n\n"
          << "   -i <input>     Take the given .json file as input. Otherwise, input will come" << "\n"
@@ -149,6 +151,10 @@ static const void display_help(void)
 	     << "                  the possible set of combinations" << "\n\n"
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n\n"
          << "   -k             Display the keys on the first line of output (for .csv)" << "\n\n"
+         << "   -p             Use performance mode to generate combinations faster at the" << "\n"
+         << "                  expense of higher RAM usage." << "\n"
+         << "                  (Note: this is only recommended for computers with large amounts" << "\n"
+         << "                  of RAM when generating a large number of random combinations)" << "\n\n"
          << "   -v             Display version number" << "\n";
 }
 
@@ -199,6 +205,35 @@ static const void generate_random_samples(const vector<long> &range, const gener
         vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
         output_result(result, args, true);
         if (args.display_json && &i != &range.back())
+        {
+            cout << ",";
+        }
+    }
+    if (args.display_json)
+    {
+        cout << "]\n";
+    }
+}
+
+static const void generate_random_samples_performance_mode( const generation_args &args)
+{
+    const vector<vector<string>> results = lazy_cartesian_product::generate_samples(args.pc.combinations, args.sample_size);
+    
+    if (!args.display_json)
+    {
+        if (args.display_keys)
+        {
+            display_csv_keys(args.pc.keys, args.delim);
+        }
+    }
+    else
+    {
+        cout << "[\n";
+    }
+    for( const vector<string> &row: results)
+    {
+        output_result(row, args, true);
+        if (args.display_json && &row != &results.back())
         {
             cout << ",";
         }
@@ -274,8 +309,15 @@ static const void parse_args(const generation_args &args)
                 cerr << "ERROR: Sample size cannot be greater than maximum possible combinations\n";
                 exit(-1);
             }
-            vector<long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
-            generate_random_samples(range, args);
+            if (args.perf_mode)
+            {
+                generate_random_samples_performance_mode(args);
+            }
+            else
+            {
+                vector<long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
+                generate_random_samples(range, args);
+            }
             exit(0);
         }
         else
@@ -340,3 +382,4 @@ static const possible_combinations parse_stdin(const string &input)
     }
     return pc;
 }
+

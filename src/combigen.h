@@ -7,7 +7,7 @@
 
 #define COMBIGEN_MAJOR_VERSION 1
 #define COMBIGEN_MINOR_VERSION 2
-#define COMBIGEN_REVISION_VERSION 0
+#define COMBIGEN_REVISION_VERSION 2
 
 #include <iostream>
 #include <iterator>
@@ -58,12 +58,14 @@ struct generation_args
     bool                            generate_all_combinations = false;
     bool                            display_keys = false;
     bool                            display_json = false;
+    bool                            perf_mode = false;
 };
 
 static const void                   display_csv_keys(const vector<string> &keys, const string &delim);
 static const void                   display_help(void);
 static const void                   generate_all(const long &max_size, const generation_args &args);
 static const void                   generate_random_samples(const vector<long> &range, const generation_args &args);
+static const void                   generate_random_samples_performance_mode(const generation_args &args);
 static const void                   output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
 static const void                   parse_args(const generation_args &args);
 static const possible_combinations  parse_file(const string &input);
