@@ -25,7 +25,7 @@
 
 #include <fstream>
 #include <sstream>
-#include "lib/nlohmann/json/json.hpp"
+#include "lib/nlohmann/json/single_include/nlohmann/json.hpp"
 #include "lib/iamtheburd/lazy-cartesian-product/lazy-cartesian-product.hpp"
 
 
