@@ -1,0 +1,6 @@
+[submodule "src/lib/iamtheburd/lazy-cartesian-product"]
+	path = src/lib/iamtheburd/lazy-cartesian-product
+	url = https://github.com/iamtheburd/lazy-cartesian-product
+[submodule "src/lib/nlohmann/json"]
+	path = src/lib/nlohmann/json
+	url = https://github.com/nlohmann/json

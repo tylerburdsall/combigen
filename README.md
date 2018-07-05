@@ -49,7 +49,7 @@ Usage: combigen [options]
 1. Clone the repository and `cd` into it:
 
 ```
-$ git clone https://github.com/iamtheburd/combigen.git && cd combigen
+$ git clone --recurse-submodules -j8 https://github.com/iamtheburd/combigen.git && cd combigen
 ```
 
 2. Build with `make`:
@@ -63,8 +63,6 @@ $ make
 ```
 $ sudo make install
 ```
-
-Alternatively, you can also check out the [Releases](https://github.com/iamtheburd/combigen/releases) tab and directly download the `combigen` binary from there.
 
 ### Windows
 
