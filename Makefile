@@ -26,4 +26,4 @@ install: combigen
 .PHONY: uninstall
 uninstall:
 	@rm -f $(DESTDIR)$(PREFIX)/bin/combigen
-	@rm -f /usr/local/man1/combigen.1
+	@rm -f /usr/local/man1/combigen.1 /usr/local/man1/combigen.1.gz
