@@ -1,0 +1,41 @@
+.\" Manpage for combigen
+.\" Send an email to tylerburdsall@gmail.com for questions or concerns regarding this man page
+.TH man 1 "05 Jun 2018" "1.2.2" "combigen man page"
+.SH NAME
+combigen \- efficiently generate combinations
+.SH SYNOPSIS
+combigen [options]
+.SH DESCRIPTION
+combigen is a memory-optimized program to help assist with data generation. It has two modes, Memory mode and Performance mode. Memory mode is for general use-cases and is the default setting as it sacrifices a small amount of computing time for a tiny memory footprint. Performance mode should be used when large quantities of data are being generated. However, keep in mind that this sacrifices memory space for computing time. As such, machines with low amounts of RAM should avoid using performance mode.
+.SH OPTIONS
+Usage: combigen [options]
+   -h             Displays this help message
+
+   -a             Generates every possible combination, restricted to memory mode.
+                  (Note: this should be used with caution when storing to disk)
+
+   -n <index>     Generate combination at nth index
+
+   -i <input>     Take the given .json file as input. Otherwise, input will come
+                  from stdin.
+                  Example: "{ "foo": [ "a", "b", "c" ], "bar": [ "1", "2" ] }"
+
+   -t <type>      Output type (csv or json). Defaults to csv
+
+   -r <size>      Generate a random sample of size r from
+                  the possible set of combinations
+
+   -d <delimiter> Set the delimiter when displaying combinations (default is ',')
+
+   -k             Display the keys on the first line of output (for .csv)
+
+   -p             Use performance mode to generate combinations faster at the
+                  expense of higher RAM usage.
+                  (Note: this is only recommended for computers with large amounts
+                  of RAM when generating a large number of random combinations)
+
+   -v             Display version number
+.SH BUGS
+No known bugs as of yet.
+.SH AUTHOR
+Tyler Burdsall (tylerburdsall@gmail.com)

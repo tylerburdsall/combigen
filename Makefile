@@ -20,7 +20,10 @@ clean:
 install: combigen
 	@mkdir -p $(DESTDIR)$(PREFIX)/bin
 	@cp $< $(DESTDIR)$(PREFIX)/bin/combigen
+	@cp doc/combigen.1 /usr/local/man/man1/
+	@gzip /usr/local/man/man1/combigen.1
 
 .PHONY: uninstall
 uninstall:
 	@rm -f $(DESTDIR)$(PREFIX)/bin/combigen
+	@rm -f /usr/local/man1/combigen.1
