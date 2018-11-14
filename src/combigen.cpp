@@ -22,7 +22,14 @@ int main(int argc, char* argv[])
                 if (optarg)
                 {
                     istringstream iss (optarg);
+		    string s = optarg;
+		    if (s.at(0) == '-')
+		    {
+		        display_help();
+			exit(-1);
+		    }
                     iss >> args.entry_at;
+		    args.entry_at_provided = true;
                     args_provided = true;
                 }
                 break;
@@ -158,7 +165,7 @@ static const void display_help(void)
          << "   -v             Display version number" << "\n";
 }
 
-static const void generate_all(const long &max_size, const generation_args &args)
+static const void generate_all(const unsigned long long &max_size, const generation_args &args)
 {
     if (!args.display_json)
     {
@@ -171,8 +178,8 @@ static const void generate_all(const long &max_size, const generation_args &args
     {
         cout << "[\n";
     }
-    const long last = max_size - 1;
-    for (long i = 0; i < max_size; ++i)
+    const unsigned long long last = max_size - 1;
+    for (unsigned long long i = 0; i < max_size; ++i)
     {
         vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
         output_result(result, args, true);
@@ -187,7 +194,7 @@ static const void generate_all(const long &max_size, const generation_args &args
     }
 }
 
-static const void generate_random_samples(const vector<long> &range, const generation_args &args)
+static const void generate_random_samples(const vector<unsigned long long> &range, const generation_args &args)
 {
     if (!args.display_json)
     {
@@ -200,7 +207,7 @@ static const void generate_random_samples(const vector<long> &range, const gener
     {
         cout << "[\n";
     }
-    for (const long &i: range)
+    for (const unsigned long long &i: range)
     {
         vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
         output_result(result, args, true);
@@ -215,7 +222,7 @@ static const void generate_random_samples(const vector<long> &range, const gener
     }
 }
 
-static const void generate_random_samples_performance_mode( const generation_args &args)
+static const void generate_random_samples_performance_mode(const generation_args &args)
 {
     const vector<vector<string>> results = lazy_cartesian_product::generate_samples(args.pc.combinations, args.sample_size);
     
@@ -267,13 +274,13 @@ static const void output_result(const vector<string> &result, const generation_a
     }
     else
     {
-        const long key_size = args.pc.keys.size();
+        const unsigned long long key_size = args.pc.keys.size();
         if (!for_optimization) 
         {
             cout << "[\n";
         }
         json entry;
-        for (long j = 0; j < key_size; ++j)
+        for (unsigned long long j = 0; j < key_size; ++j)
         {
             entry[args.pc.keys[j]] = result[j];
         }
@@ -287,7 +294,7 @@ static const void output_result(const vector<string> &result, const generation_a
 
 static const void parse_args(const generation_args &args)
 {
-    long max_size = lazy_cartesian_product::compute_max_size(args.pc.combinations);
+    unsigned long long max_size = lazy_cartesian_product::compute_max_size(args.pc.combinations);
     if (args.generate_all_combinations)
     {
         generate_all(max_size, args);
@@ -295,15 +302,15 @@ static const void parse_args(const generation_args &args)
     }
     else
     {
-        if (args.sample_size == 0 && args.entry_at > -1 && !args.generate_all_combinations)
+        if (args.sample_size == 0 && args.entry_at_provided && !args.generate_all_combinations)
         {
             vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, args.entry_at);
             output_result(result, args, false);
             exit(0);
         }
-        else if (args.sample_size > 0)
+        else if (args.sample_size >= 0)
         {
-            const long n = args.sample_size;
+            const unsigned long long n = args.sample_size;
             if (n > max_size)
             {
                 cerr << "ERROR: Sample size cannot be greater than maximum possible combinations\n";
@@ -315,7 +322,7 @@ static const void parse_args(const generation_args &args)
             }
             else
             {
-                vector<long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
+                vector<unsigned long long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
                 generate_random_samples(range, args);
             }
             exit(0);
