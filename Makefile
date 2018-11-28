@@ -1,19 +1,36 @@
 CXX = g++
-CXXFLAGS = -Wall -O2 -std=c++11
+CXXFLAGS = -Wall -O2 -std=c++14
+LIBFLAGS =
+BOOSTFLAGS = -DUSE_BOOST
 PREFIX = /usr/local
-COMBIGEN_DIR = ./src
+COMBIGENDIR = ./src
+COMBIGENFILE = combigen.cpp
+BUILDDIR = release
 
-all: combigen
+all: main
 
-combigen: combigen.o
-	$(CXX) $(CXXFLAGS) build/combigen.o -o combigen
+main:	cli_functions.o combigen.o main.o
+	$(CXX) $(CXXFLAGS) build/$(BUILDDIR)/main.o build/$(BUILDIR)/combigen.o build/$(BUILDDIR)/cli_functions.o -o combigen $(LIBFLAGS)
 
-combigen.o: $(COMBIGEN_DIR)/combigen.cpp $(COMBIGEN_DIR)/combigen.h
-	$(CXX) $(CXXFLAGS) $(COMBIGEN_DIR)/combigen.cpp -c -o build/combigen.o
+main.o: $(COMBIGENDIR)/main.cpp
+	$(CXX) $(CXXFLAGS) $(COMBIGENDIR)/main.cpp -c -o build/$(BUILDDIR)/main.o
+
+combigen.o: $(COMBIGENDIR)/combigen.cpp $(COMBIGENDIR)/combigen.h
+	$(CXX) $(CXXFLAGS) $(COMBIGENDIR)/$(COMBIGENFILE) -c -o build/$(BUILDDIR)/combigen.o
+
+cli_functions.o: $(COMBIGENDIR)/cli_functions.cpp $(COMBIGENDIR)/combigen.h
+	$(CXX) $(CXXFLAGS) $(COMBIGENDIR)/cli_functions.cpp -c -o build/$(BUILDDIR)/cli_functions.o
+
+.PHONY: perf
+perf: CXXFLAGS += $(BOOSTFLAGS)
+perf: LIBFLAGS += -lboost_random
+perf: COMBIGENFILE = boost_functions.cpp
+perf: BUILDDIR = perf
+perf: main
 
 .PHONY: clean
 clean:
-	@rm -f build/*.o combigen
+	@rm -f build/*/*.o combigen
 
 
 .PHONY: install
