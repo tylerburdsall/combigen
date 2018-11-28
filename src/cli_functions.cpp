@@ -1,9 +1,9 @@
-#ifndef CLI_FUNCTIONS
-#define CLI_FUNCTIONS
+#ifndef CLI_FUNCTIONS_CPP
+#define CLI_FUNCTIONS_CPP
 
-#include "combigen.h"
+#include "cli_functions.h"
 
-static const void display_help(void)
+const void display_help(void)
 {
     cout << "Usage: combigen [options]" << "\n"
          << "   -h             Displays this help message" << "\n\n"
@@ -15,7 +15,7 @@ static const void display_help(void)
          << "                  Example: \"{ \"foo\": [ \"a\", \"b\", \"c\" ], \"bar\": [ \"1\", \"2\" ] }\"" << "\n\n"
          << "   -t <type>      Output type (csv or json). Defaults to csv" << "\n\n"
          << "   -r <size>      Generate a random sample of size r from" << "\n"
-	     << "                  the possible set of combinations" << "\n\n"
+	 << "                  the possible set of combinations" << "\n\n"
          << "   -d <delimiter> Set the delimiter when displaying combinations (default is ',')" << "\n\n"
          << "   -k             Display the keys on the first line of output (for .csv)" << "\n\n"
          << "   -p             Use performance mode to generate combinations faster at the" << "\n"
@@ -26,7 +26,7 @@ static const void display_help(void)
 }
 
 
-static const void display_csv_keys(const vector<string> &keys, const string &delim)
+const void display_csv_keys(const vector<string> &keys, const string &delim)
 {
     for (auto& s: keys)
     {
@@ -42,7 +42,7 @@ static const void display_csv_keys(const vector<string> &keys, const string &del
     cout << '\n';
 }
 
-static const void output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization)
+const void output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization)
 {
     if (!args.display_json)
     {
@@ -83,7 +83,7 @@ static const void output_result(const vector<string> &result, const generation_a
     }
 }
 
-static const possible_combinations parse_file(const string &input)
+const possible_combinations parse_file(const string &input)
 {
     possible_combinations pc;
     try
@@ -112,7 +112,7 @@ static const possible_combinations parse_file(const string &input)
     return pc;
 }
 
-static const possible_combinations parse_stdin(const string &input)
+const possible_combinations parse_stdin(const string &input)
 {
     possible_combinations pc;
     try
