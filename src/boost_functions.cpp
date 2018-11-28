@@ -3,10 +3,14 @@
 
 #include "combigen.h"
 
-static const void generate_random_samples_performance_mode(const generation_args &args)
+// Forward declare functions from cli_functions.h
+const void output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
+const void display_help(void);
+const void display_csv_keys(const vector<string> &keys, const string &delim);
+
+const void generate_random_samples_performance_mode(const generation_args &args)
 {
-    const uint1024_t sample_size(args.sample_size);
-    const vector<vector<string>> results = lazy_cartesian_product::boost_generate_samples(args.pc.combinations, sample_size);
+    const vector<vector<string>> results = lazy_cartesian_product::boost_generate_samples(args.pc.combinations, args.sample_size);
     if (!args.display_json)
     {
         if (args.display_keys)
@@ -32,7 +36,7 @@ static const void generate_random_samples_performance_mode(const generation_args
     }
 }
 
-static const void parse_args(const generation_args &args)
+const void parse_args(const generation_args &args)
 {
     const uint1024_t max_size = lazy_cartesian_product::boost_compute_max_size(args.pc.combinations);
     if (args.generate_all_combinations)
@@ -64,7 +68,7 @@ static const void parse_args(const generation_args &args)
             }
             else
             {
-                vector<uint1024_t> range = lazy_cartesian_product::boost_generate_random_indices(n, max_size);
+                vector<uint1024_t> range = lazy_cartesian_product::boost_generate_random_indices(args.sample_size, max_size);
                 generate_random_samples(range, args);
             }
             exit(0);
@@ -77,7 +81,7 @@ static const void parse_args(const generation_args &args)
     }
 }
 
-static const void generate_random_samples(const vector<uint1024_t> &range, const generation_args &args)
+const void generate_random_samples(const vector<uint1024_t> &range, const generation_args &args)
 {
     if (!args.display_json)
     {
@@ -105,7 +109,7 @@ static const void generate_random_samples(const vector<uint1024_t> &range, const
     }
 }
 
-static const void generate_all(const uint1024_t &max_size, const generation_args &args)
+const void generate_all(const uint1024_t &max_size, const generation_args &args)
 {
     if (!args.display_json)
     {
