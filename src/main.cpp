@@ -5,12 +5,6 @@
 #define COMBIGEN_MINOR_VERSION 3
 #define COMBIGEN_REVISION_VERSION 0
 
-#include <iostream>
-#include <iterator>
-#include <string>
-#include <cstdlib>
-#include <sstream>
-
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "lib/win-getopt/getopt.h"
 #else
@@ -18,13 +12,7 @@
 #endif
 
 #include "combigen.h"
-
-using std::cout;
-using std::cin;
-using std::cerr;
-using std::string;
-using std::istringstream;
-using std::istreambuf_iterator;
+#include "cli_functions.h"
 
 int main(int argc, char* argv[])
 {
