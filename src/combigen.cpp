@@ -2,10 +2,12 @@
 #define COMBIGEN_CPP
 
 #include "combigen.h"
+#include "cli_functions.h"
 
-static const void generate_random_samples_performance_mode(const generation_args &args)
+const void generate_random_samples_performance_mode(const generation_args &args)
 {
-    const vector<vector<string>> results = lazy_cartesian_product::generate_samples(args.pc.combinations, args.sample_size);
+    unsigned long long sample_size = stoull(args.sample_size, 0, 10);
+    const vector<vector<string>> results = lazy_cartesian_product::generate_samples(args.pc.combinations, sample_size);
     if (!args.display_json)
     {
         if (args.display_keys)
@@ -32,7 +34,7 @@ static const void generate_random_samples_performance_mode(const generation_args
 }
 
 
-static const void parse_args(const generation_args &args)
+const void parse_args(const generation_args &args)
 {
     const unsigned long long max_size = lazy_cartesian_product::compute_max_size(args.pc.combinations);
     if (args.generate_all_combinations)
@@ -78,7 +80,7 @@ static const void parse_args(const generation_args &args)
 }
 
 
-static const void generate_all(const unsigned long long &max_size, const generation_args &args)
+const void generate_all(const unsigned long long &max_size, const generation_args &args)
 {
     if (!args.display_json)
     {
@@ -107,7 +109,7 @@ static const void generate_all(const unsigned long long &max_size, const generat
     }
 }
 
-static const void generate_random_samples(const vector<unsigned long long> &range, const generation_args &args)
+const void generate_random_samples(const vector<unsigned long long> &range, const generation_args &args)
 {
     if (!args.display_json)
     {

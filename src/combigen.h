@@ -1,14 +1,18 @@
+/* combigen.h
+ * 
+ * (c) Tyler Burdsall - 2018
+ */
 #ifndef COMBIGEN_H
 #define COMBIGEN_H
 
 #include <iostream>
 #include <iterator>
 #include <iomanip>
+#include <string>
 #include <cstdlib>
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
-#include <string>
 #include "lib/nlohmann/json/single_include/nlohmann/json.hpp"
 #include "lib/iamtheburd/lazy-cartesian-product/lazy-cartesian-product.hpp"
 
@@ -28,7 +32,7 @@ using std::cin;
 using std::cerr;
 using std::string;
 using std::ifstream;
-using std::istreamstream;
+using std::istringstream;
 using std::istreambuf_iterator;
 using std::runtime_error;
 
@@ -55,6 +59,14 @@ struct generation_args
     bool	                    entry_at_provided = false;
 };
 
-
+#ifdef USE_BOOST
+const void                   generate_all(const uint1024_t &max_size, const generation_args &args);
+const void                   generate_random_samples(const vector<uint1024_t> &range, const generation_args &args);
+#else
+const void                   generate_all(const unsigned long long &max_size, const generation_args &args);
+const void                   generate_random_samples(const vector<unsigned long long> &range, const generation_args &args);
+#endif
+const void                   generate_random_samples_performance_mode(const generation_args &args);
+const void                   parse_args(const generation_args &args);
 
 #endif
