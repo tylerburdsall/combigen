@@ -1,6 +1,6 @@
 .\" Manpage for combigen
 .\" Send an email to tylerburdsall@gmail.com for questions or concerns regarding this man page
-.TH man 1 "05 Jun 2018" "1.2.2" "combigen man page"
+.TH man 1 "28 Nov 2018" "1.3.0" "combigen man page"
 .SH NAME
 combigen \- efficiently generate combinations
 .SH SYNOPSIS
@@ -19,6 +19,7 @@ Usage: combigen [options]
    -i <input>     Take the given .json file as input. Otherwise, input will come
                   from stdin.
                   Example: "{ "foo": [ "a", "b", "c" ], "bar": [ "1", "2" ] }"
+                  Or:      "[ ["1", "2"], ["3", "4", "a", "b"] ]"
 
    -t <type>      Output type (csv or json). Defaults to csv
 
