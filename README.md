@@ -116,7 +116,7 @@ $ sudo make install
 > cl /EHsc /O2 src\cli_functions.cpp src\combigen.cpp src\main.cpp /Fe".\combigen.exe" 
 ```
 
-Alternatively, if you need support for larger sets of data (and have Boost installed somewhere on your machine), run this command instead. Ensure you fill in the proper path to your Boost directory (this example assumes Boost 1.68.0 installed):
+Alternatively, if you need support for large rsets of data (and have Boost installed somewhere on your machine), run this command instead. Ensure you fill in the proper path to your Boost directory (this example assumes Boost 1.68.0 installed):
 
 ```
 > cl /EHsc /DUSE_BOOST /O2 /I C:\path\to\boost_1_68_0 src\cli_functions.cpp src\boost_functions.cpp src\main.cpp /Fe".\combigen.exe" /link /LIBPATH:C:\path\to\boost_1_68_0\lib64-msvc-14.1
