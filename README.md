@@ -72,7 +72,7 @@ I recommend downloaded the precompiled libraries and placing them somewhere easy
 
 
 ## Building From Source and Installing
-Note: for Windows, if you do not want to/don't have the ability to compile from the source files you can go to the [Release](https://github.com/iamtheburd/combigen/releases) page and directly download the `combigen.exe` binary from there.
+Note: for Windows, if you do not want to/don't have the ability to compile from the source files you can go to the [Release](https://github.com/iamtheburd/combigen/releases) page and directly download the `combigen.exe` binary from there. This also has the added of benefit of being compiled with the Boost libraries already.
 
 ### Linux/UNIX
 
