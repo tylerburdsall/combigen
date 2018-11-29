@@ -92,11 +92,20 @@ const possible_combinations parse_file(const string &input)
         json json_file;
         i >> json_file;
 
-        for (auto obj = json_file.begin(); obj != json_file.end(); ++obj)
+        if (json_file.type() == json::value_t::array)
         {
-            pc.keys.push_back(obj.key());
-            vector<string> vals = json_file[obj.key()];
-            pc.combinations.push_back(vals);
+            for (json::iterator arr = json_file.begin(); arr != json_file.end(); ++arr)
+            {
+                pc.combinations.push_back(arr.value());
+            }
+        }
+        else
+        {
+            for (auto obj = json_file.begin(); obj != json_file.end(); ++obj)
+            {
+                pc.keys.push_back(obj.key());
+                pc.combinations.push_back(obj.value());
+            }
         }
     }
     catch (const nlohmann::detail::parse_error&)
@@ -118,12 +127,22 @@ const possible_combinations parse_stdin(const string &input)
     try
     {
         auto parsed = json::parse(input);
-        for (auto obj = parsed.begin(); obj != parsed.end(); ++obj)
+        if (parsed.type() == json::value_t::array)
         {
-            pc.keys.push_back(obj.key());
-            vector<string> vals = parsed[obj.key()];
-            pc.combinations.push_back(vals);
+            for (json::iterator arr = parsed.begin(); arr != parsed.end(); ++arr)
+            {
+                pc.combinations.push_back(arr.value());
+            }
         }
+        else
+        {
+            for (auto obj = parsed.begin(); obj != parsed.end(); ++obj)
+            {
+                pc.keys.push_back(obj.key());
+                pc.combinations.push_back(obj.value());
+            }
+        }
+        
     }
     catch (const nlohmann::detail::type_error&)
     {
