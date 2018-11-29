@@ -84,7 +84,7 @@ const void parse_args(const generation_args &args)
             }
             else
             {
-                vector<unsigned long long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
+                set<unsigned long long> range = lazy_cartesian_product::generate_random_indices(n, max_size);
                 generate_random_samples(range, args);
             }
             exit(0);
@@ -127,7 +127,7 @@ const void generate_all(const unsigned long long &max_size, const generation_arg
     }
 }
 
-const void generate_random_samples(const vector<unsigned long long> &range, const generation_args &args)
+const void generate_random_samples(const set<unsigned long long> &range, const generation_args &args)
 {
     if (!args.display_json)
     {
@@ -140,14 +140,16 @@ const void generate_random_samples(const vector<unsigned long long> &range, cons
     {
         cout << "[\n";
     }
-    for (const unsigned long long &i: range)
+    set<unsigned long long>::const_iterator i = range.begin();
+    while (i != range.end())
     {
-        vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, i);
+        vector<string> result = lazy_cartesian_product::entry_at(args.pc.combinations, *i);
         output_result(result, args, true);
-        if (args.display_json && &i != &range.back())
+        if (args.display_json && i != range.end())
         {
             cout << ",";
         }
+        ++i;
     }
     if (args.display_json)
     {
