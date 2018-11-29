@@ -21,7 +21,7 @@
 
 #define COMBIGEN_MAJOR_VERSION 1
 #define COMBIGEN_MINOR_VERSION 3
-#define COMBIGEN_REVISION_VERSION 1
+#define COMBIGEN_REVISION_VERSION 2
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "lib/win-getopt/getopt.h"
