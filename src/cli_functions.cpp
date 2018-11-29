@@ -89,12 +89,24 @@ const void output_result(const vector<string> &result, const generation_args &ar
         {
             cout << "[\n";
         }
-        json entry;
-        for (unsigned long long j = 0; j < key_size; ++j)
+        if (key_size == 0)
         {
-            entry[args.pc.keys[j]] = result[j];
+            json entry = json::array();
+            for (const string& s : result)
+            {
+                entry.push_back(s);
+            }
+            cout << entry.dump(4);
         }
-        cout << entry.dump(4);
+        else
+        {
+            json entry;
+            for (unsigned long long j = 0; j < key_size; ++j)
+            {
+                entry[args.pc.keys[j]] = result[j];
+            }
+            cout << entry.dump(4);
+        }
         if (!for_optimization)
         {
             cout << "]\n";
