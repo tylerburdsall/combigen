@@ -2,7 +2,7 @@
 An efficient CLI tool to generate possible combinations written in C++
 
 ## Introduction
-Combigen aims to assist with data generation and exploration. Given a `.json` input where each key contains an array of string values, combigen can either generate every possible combination or a random subset of the possible combinations. It aims to be memory-efficient while maintaining high-performance. This can be especially useful when large amounts of data are needed for statistical analysis or mock data in an application.
+Combigen aims to assist with data generation and exploration. Given a `.json` input where each key contains an array of string values (or simply an array of string arrays), combigen can either generate every possible combination or a random, evenly-distributed subset of the possible combinations. It aims to be memory-efficient while maintaining high-performance. This can be especially useful when large amounts of data are needed for statistical analysis or mock data in an application.
 
 It supports output as `.csv` and `.json`.
 
@@ -41,8 +41,38 @@ Usage: combigen [options]
    -v             Display version number
 ```
 
-## Installation
+## Prerequisites
+### Linux/UNIX/Cygwin
+**Required:**
+* make
+* g++ (capable of compiling to the C++14 standard or higher)
 
+**Optional:**
+* [Boost](https://www.boost.org), in case you are working with large sets of data
+
+If you need to install Boost, I recommend utilizing your distro's package manager:
+
+#### Debian/Ubuntu
+`$ sudo apt install libboost-all-dev`
+
+#### Fedora
+`$ sudo dnf install boost`
+
+#### Arch/Manjaro/Antergos
+`$ sudo pacman -Sy boost`
+
+
+### Windows
+**Required:**
+* Visual Studio 2015 or higher
+
+**Optional:**
+* [Boost](https://www.boost.org), in case you are working with large sets of data. 
+I recommend downloaded the precompiled libraries and placing them somewhere easy to remember on your machine.
+
+
+## Building From Source and Installing
+Note: for Windows, if you do not want to/don't have the ability to compile from the source files you can go to the [Release](https://github.com/iamtheburd/combigen/releases) page and directly download the `combigen.exe` binary from there. This also has the added of benefit of being compiled with the Boost libraries already.
 
 ### Linux/UNIX
 
@@ -58,6 +88,12 @@ $ git clone --recurse-submodules -j8 https://github.com/iamtheburd/combigen.git 
 $ make
 ```
 
+If you need support for larger sets of data (and have Boost installed), instead build with `make perf`:
+
+```
+$ make perf
+```
+
 3. Install:
 
 ```
@@ -66,10 +102,9 @@ $ sudo make install
 
 ### Windows
 
+1. Download Visual Studio 2015+ and install.
 
-1. Download Visual Studio and install first
-
-2. Clone the repository to some directory
+2. Clone the repository to some directory using the above command
 
 3. Open up the Developer Command Prompt (can usually be found by searching in the Start menu)
 
@@ -78,16 +113,21 @@ $ sudo make install
 5. Build the file:
 
 ```
-> cl src\combigen.cpp /EHsc /O2
+> cl /EHsc /O2 src\cli_functions.cpp src\combigen.cpp src\main.cpp /Fe".\combigen.exe" 
+```
+
+Alternatively, if you need support for large rsets of data (and have Boost installed somewhere on your machine), run this command instead. Ensure you fill in the proper path to your Boost directory (this example assumes Boost 1.68.0 installed):
+
+```
+> cl /EHsc /DUSE_BOOST /O2 /I C:\path\to\boost_1_68_0 src\cli_functions.cpp src\boost_functions.cpp src\main.cpp /Fe".\combigen.exe" /link /LIBPATH:C:\path\to\boost_1_68_0\lib64-msvc-14.1
 ```
 
 6. Place the resulting `combigen.exe` wherever you desire
 
-Alternatively, you can also check out the [Releases](https://github.com/iamtheburd/combigen/releases) tab and directly download the `combigen.exe` from there.
 
 ## Usage
 
-Using the example `.json` data provided, here are some examples showcasing some features:
+Using the example `combinations.json` data provided, here are some examples showcasing some features:
 
 ### Input
 
@@ -116,6 +156,16 @@ $ combigen -i example_data/combinations.json -r 50000 > output.txt  # Generate 5
                                                                     # and store them in output.txt
 ```
 
+### Large Sets of Data
+
+To demonstrate how `combigen` can even work with large sets of data (when compiled with the Boost library) we can use the example `large_bits.json` file. Unlike the above example data, this file only contains an array of string arrays. In this set of data, the maximum size is equivalent to 3 ^ 256. We can still find the last entry (max size - 1):
+
+```
+$ combigen -i example_data/large_bits.json -n 139008452377144732764939786789661303114218850808529137991604824430036072629766435941001769154109609521811665540548899435520
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+$
+```
+
 
 ### Types
 
@@ -140,8 +190,8 @@ $
 You can also change the delimiter with the `-d` flag:
 
 ```
-$ combigen -i example_data/combinations.json -r 3 -k -d "|"  # Generate 3 random combinations, display the keys,
-                                                             # and set the delimiter to ||
+$ combigen -i example_data/combinations.json -r 3 -k -d "||"  # Generate 3 random combinations, display the keys,
+                                                              # and set the delimiter to ||
 Age||First Name||Last Name||Number of Children||Number of Pets||Primary Desktop OS||Primary Mobile Phone OS||Residence||State/Territory
 20||Samantha||Harris||3||4||Windows||Other||RV||GA
 25||Matthew||Thomas||2||0||Windows||Other||Town Home||IL
@@ -266,6 +316,8 @@ Combigen uses the following open-source libraries:
 * [lazy-cartesian-product](https://github.com/iamtheburd/lazy-cartesian-product) - Small C++ library I developed to generate the combinations
 
 * [skandhurkat/Getopt-for-Visual-Studio](https://github.com/skandhurkat/Getopt-for-Visual-Studio) - Port of the MinGW version of `getopt.h` so that the CLI works on Windows
+
+* [Boost](https://www.boost.org) - For operating with incredibly large sets of data that push the limits of an `unsigned long long`.
 
 
 ## Contributing

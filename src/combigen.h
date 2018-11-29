@@ -1,38 +1,49 @@
 /* combigen.h
- * 
- * (c) Tyler Burdsall - 2018
+ *
+ * Copyright (C) 2018 Tyler Burdsall
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef COMBIGEN
-#define COMBIGEN
 
-#define COMBIGEN_MAJOR_VERSION 1
-#define COMBIGEN_MINOR_VERSION 2
-#define COMBIGEN_REVISION_VERSION 2
+#ifndef COMBIGEN_H
+#define COMBIGEN_H
 
 #include <iostream>
 #include <iterator>
 #include <iomanip>
-#include <vector>
 #include <string>
 #include <cstdlib>
 #include <stdexcept>
-
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-#include "lib/win-getopt/getopt.h"
-#else
-#include <unistd.h>
-#endif
-
 #include <fstream>
 #include <sstream>
 #include "lib/nlohmann/json/single_include/nlohmann/json.hpp"
 #include "lib/iamtheburd/lazy-cartesian-product/lazy-cartesian-product.hpp"
 
+#ifdef USE_BOOST
+#include <boost/container/vector.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+using boost::container::vector;
+using namespace boost::multiprecision;
+#else
+#include <vector>
+using std::vector;
+using std::stoull;
+#endif
 
 using std::cout;
 using std::cin;
 using std::cerr;
-using std::vector;
 using std::string;
 using std::ifstream;
 using std::istringstream;
@@ -53,8 +64,8 @@ struct generation_args
     possible_combinations           pc;
     string                          input;
     string                          delim = ",";
-    unsigned long long              entry_at = 0;
-    unsigned long long              sample_size = 0;
+    string                          entry_at = "0";
+    string                          sample_size = "0";
     bool                            generate_all_combinations = false;
     bool                            display_keys = false;
     bool                            display_json = false;
@@ -62,14 +73,14 @@ struct generation_args
     bool	                    entry_at_provided = false;
 };
 
-static const void                   display_csv_keys(const vector<string> &keys, const string &delim);
-static const void                   display_help(void);
-static const void                   generate_all(const unsigned long long &max_size, const generation_args &args);
-static const void                   generate_random_samples(const vector<unsigned long long> &range, const generation_args &args);
-static const void                   generate_random_samples_performance_mode(const generation_args &args);
-static const void                   output_result(const vector<string> &result, const generation_args &args, const bool &for_optimization);
-static const void                   parse_args(const generation_args &args);
-static const possible_combinations  parse_file(const string &input);
-static const possible_combinations  parse_stdin(const string &input);
+#ifdef USE_BOOST
+const void                   generate_all(const uint1024_t &max_size, const generation_args &args);
+const void                   generate_random_samples(const vector<uint1024_t> &range, const generation_args &args);
+#else
+const void                   generate_all(const unsigned long long &max_size, const generation_args &args);
+const void                   generate_random_samples(const vector<unsigned long long> &range, const generation_args &args);
+#endif
+const void                   generate_random_samples_performance_mode(const generation_args &args);
+const void                   parse_args(const generation_args &args);
 
 #endif
