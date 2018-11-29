@@ -1,5 +1,5 @@
-build/*.o
+build/*/*.o
+*.obj
 combigen
 combigen.exe
-combigen.obj
 *.txt
