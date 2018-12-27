@@ -124,6 +124,8 @@ Alternatively, if you need support for larger sets of data (and have Boost insta
 
 6. Place the resulting `combigen.exe` wherever you desire
 
+7. **Note:** Do not use PowerShell to execute `combigen.exe`. For whatever reason, PowerShell completely bogs down execution time. It is better to use `cmd` instead.
+
 
 ## Usage
 
@@ -300,7 +302,7 @@ The results from the test were graphed:
 
 #### Conclusion
 
-Based on the results above, Performance Mode will only start to offer real benefits when the amount of combinations is quite large. However, this should only be used when the computer can truly handle storing all of these combinations in RAM. Ultimately, it boils down to two factors:
+Based on the results above, Performance Mode will only start to offer real benefits when the amount of combinations is quite large, but the net difference still ends up being negligible. Performance mode should only be used when the computer can truly handle storing all of these combinations in RAM. Ultimately, it boils down to two factors:
 
 * If you can spare time and don't want to bog down your machine (or the amount of generated combinations is small), stick with the default Memory Mode.
 * If you have a well-spec'd machine and can sacrifice the RAM when generating a large amount of combinations, choose Performance Mode.
