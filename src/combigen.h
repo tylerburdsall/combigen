@@ -68,10 +68,10 @@ struct generation_args
 
 #ifdef USE_BOOST
 const void                   generate_all(const uint1024_t &max_size, const generation_args &args);
-const void                   generate_random_samples(const set<uint1024_t> &range, const generation_args &args);
+const void                   generate_random_samples(const uint1024_t &max_size, const generation_args &args);
 #else
 const void                   generate_all(const unsigned long long &max_size, const generation_args &args);
-const void                   generate_random_samples(const set<unsigned long long> &range, const generation_args &args);
+const void                   generate_random_samples(const unsigned long long &max_size, const generation_args &args);
 #endif
 const void                   generate_random_samples_performance_mode(const generation_args &args);
 const void                   generate_random_samples_memory_mode(const generation_args &args);

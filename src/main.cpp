@@ -20,8 +20,8 @@
 #define MAIN
 
 #define COMBIGEN_MAJOR_VERSION 1
-#define COMBIGEN_MINOR_VERSION 3
-#define COMBIGEN_REVISION_VERSION 2
+#define COMBIGEN_MINOR_VERSION 4
+#define COMBIGEN_REVISION_VERSION 0
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "lib/win-getopt/getopt.h"
@@ -101,12 +101,14 @@ int main(int argc, char* argv[])
                 break;
             case 'k':
                 args_provided = true;
+                args.display_keys = true;
                 break;
             case 'v':
                 cout << "combigen - v" << COMBIGEN_MAJOR_VERSION << '.' << COMBIGEN_MINOR_VERSION << '.' << COMBIGEN_REVISION_VERSION << '\n';
                 exit(0);
             case 'p':
                 args.perf_mode = true;
+                args_provided = true;
                 break;
             default: 
                 display_help();
