@@ -124,6 +124,8 @@ Alternatively, if you need support for larger sets of data (and have Boost insta
 
 6. Place the resulting `combigen.exe` wherever you desire
 
+7. **Note:** Do not use PowerShell to execute `combigen.exe`. For whatever reason, PowerShell completely bogs down execution time. It is better to use `cmd` instead.
+
 
 ## Usage
 
@@ -279,14 +281,14 @@ Each iteration of a test would time the amount of time it takes to generate *n* 
 
 The following tests were performed on a Lenovo ThinkPad T460 with the following specs:
 
-* Windows 7 Enterprise
+* Windows 10 Enterprise
 * 256GB SSD w/full disk encryption
 * 8GB Ram
 * Intel Core i5 - 6300U @ 2.40GHz
 
 The environment was tested with the following:
 
-* Compiled with Visual Studio Developer Tools 2017 with the compile flags listed above
+* Compiled with Visual Studio Developer Tools 2017 x64 with the compile flags listed above
 * Git Bash as a shell to utilize the UNIX `time` function
 * Each iteration was generated using the command `time ./combigen.exe -i example_data/combinations.json -r "$n" # amount of random combinations > output.txt`
 
@@ -300,9 +302,9 @@ The results from the test were graphed:
 
 #### Conclusion
 
-Based on the results above, Performance Mode will only start to offer real benefits when the amount of combinations is quite large. However, this should only be used when the computer can truly handle storing all of these combinations in RAM. Ultimately, it boils down to two factors:
+Based on the results above, Performance Mode will only start to offer real benefits when the amount of combinations is quite large, but the net difference still ends up being negligible. Performance mode should only be used when the computer can truly handle storing all of these combinations in RAM. Ultimately, it boils down to two factors:
 
-* If you can spare time and don't want to bog down your machine (or the amount of generated combinations is small), stick with the default Memory Mode
+* If you can spare time and don't want to bog down your machine (or the amount of generated combinations is small), stick with the default Memory Mode.
 * If you have a well-spec'd machine and can sacrifice the RAM when generating a large amount of combinations, choose Performance Mode.
 
 Regardless, a large amount of combinations requires a large amount of disk space, so keep this into account when generating data.
