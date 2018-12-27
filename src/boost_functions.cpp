@@ -86,8 +86,7 @@ const void parse_args(const generation_args &args)
             }
             else
             {
-                set<uint1024_t> range = lazy_cartesian_product::boost_generate_random_indices(args.sample_size, max_size);
-                generate_random_samples(range, args);
+                generate_random_samples(max_size, args);
             }
             exit(0);
         }
@@ -99,7 +98,7 @@ const void parse_args(const generation_args &args)
     }
 }
 
-const void generate_random_samples(const set<uint1024_t> &range, const generation_args &args)
+const void generate_random_samples(const uint1024_t &max_size, const generation_args &args)
 {
     if (!args.display_json)
     {
@@ -112,16 +111,16 @@ const void generate_random_samples(const set<uint1024_t> &range, const generatio
     {
         cout << "[\n";
     }
-    set<uint1024_t>::const_iterator i = range.begin();
-    while (i != range.end())
+    const uint1024_t parsed_sample_size(args.sample_size);
+    lazycp::RandomIterator iter(parsed_sample_size, max_size - 1);
+    while (iter.has_next())
     {
-        vector<string> result = lazy_cartesian_product::boost_entry_at(args.pc.combinations, (*i).convert_to<string>());
+        vector<string> result = lazy_cartesian_product::boost_entry_at(args.pc.combinations, iter.next().convert_to<string>());
         output_result(result, args, true);
-        if (args.display_json && i != range.end())
+        if (args.display_json && iter.has_next())
         {
             cout << ",";
         }
-        ++i;
     }
     if (args.display_json)
     {
