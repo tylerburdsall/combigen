@@ -1,13 +1,14 @@
 #!/bin/bash
 
-for amount in 100000 500000 1000000 1500000 2000000 2500000 3000000 
+for amount in 1000 10000 100000 1000000 5000000 10000000
 do
+        echo "$amount";
 	for i in {1..5}
 	do
-		echo "$amount - $i";
-		time ./combigen.exe -i example_data/combinations.json -r "$amount" -k > output.txt
-		echo 
+            x=`(time ./combigen.exe -i example_data/combinations.json -r $amount > output.txt) 2>&1 | grep real | cut -f2`
+            echo $x
 	done
+        echo
 done
 rm output.txt
 
