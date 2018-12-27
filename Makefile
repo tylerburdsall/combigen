@@ -10,7 +10,7 @@ BUILDDIR = release
 all: main
 
 main:	cli_functions.o combigen.o main.o
-	$(CXX) $(CXXFLAGS) build/$(BUILDDIR)/main.o build/$(BUILDIR)/combigen.o build/$(BUILDDIR)/cli_functions.o -o combigen $(LIBFLAGS)
+	$(CXX) $(CXXFLAGS) build/$(BUILDDIR)/main.o build/$(BUILDDIR)/combigen.o build/$(BUILDDIR)/cli_functions.o -o combigen $(LIBFLAGS)
 
 main.o: $(COMBIGENDIR)/main.cpp
 	$(CXX) $(CXXFLAGS) $(COMBIGENDIR)/main.cpp -c -o build/$(BUILDDIR)/main.o
