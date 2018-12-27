@@ -139,7 +139,7 @@ const void generate_random_samples(const unsigned long long &max_size, const gen
     {
         cout << "[\n";
     }
-    unsigned long long parsed_sample_size = stoull(args.sample_size);
+    unsigned long long parsed_sample_size = stoull(args.sample_size, 0, 10);
     lazycp::RandomIterator iter(parsed_sample_size, max_size - 1);
     while (iter.has_next())
     {
